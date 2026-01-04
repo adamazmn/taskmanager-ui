@@ -1,0 +1,120 @@
+<div class="modern-container">
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-icon"></div>
+      <a routerLink="/" class="logo-text">MYDAILY</a>
+    </div>
+    <div class="header-right">
+      <a routerLink="/tasks" class="login-link">Tasks</a>
+      <a routerLink="/profile" class="login-link">Profile</a>
+      <div class="menu-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="content-wrapper">
+    <div class="form-header">
+      <h1 class="page-title">{{ isEditMode ? 'Edit Task' : 'Create New Task' }}</h1>
+      <p class="page-subtitle">{{ isEditMode ? 'Update your task details' : 'Add a new task to your list' }}</p>
+    </div>
+
+    <div class="form-container">
+      <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="task-form">
+        <div class="form-group">
+          <label class="form-label" for="title">Title *</label>
+          <input
+            id="title"
+            type="text"
+            formControlName="title"
+            class="form-input"
+            [class.error]="title?.invalid && title?.touched"
+            placeholder="Enter task title">
+          <div *ngIf="title?.invalid && title?.touched" class="error-message">
+            <span *ngIf="title?.errors?.['required']">Title is required</span>
+            <span *ngIf="title?.errors?.['minlength']">Title must be at least 3 characters</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="description">Description *</label>
+          <textarea
+            id="description"
+            formControlName="description"
+            class="form-textarea"
+            [class.error]="description?.invalid && description?.touched"
+            rows="4"
+            placeholder="Enter task description"></textarea>
+          <div *ngIf="description?.invalid && description?.touched" class="error-message">
+            <span *ngIf="description?.errors?.['required']">Description is required</span>
+            <span *ngIf="description?.errors?.['minlength']">Description must be at least 10 characters</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="status">Status *</label>
+          <select
+            id="status"
+            formControlName="status"
+            class="form-select">
+            <option value="pending">Pending</option>
+            <option value="done">Done</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="dueDate">Due Date (Optional)</label>
+          <input
+            id="dueDate"
+            type="date"
+            formControlName="dueDate"
+            class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="attachments">Attachments (Images/Files)</label>
+          <div class="file-upload-area">
+            <input
+              id="attachments"
+              type="file"
+              class="file-input"
+              multiple
+              accept="image/*,.pdf,.doc,.docx,.txt"
+              (change)="onFileSelected($event)">
+            <label for="attachments" class="file-upload-label">
+              <span class="upload-icon">📎</span>
+              <span class="upload-text">Click to upload or drag and drop</span>
+              <span class="upload-hint">Images, PDF, DOC, TXT (Max 10MB per file)</span>
+            </label>
+          </div>
+          <div *ngIf="filePreviews.length > 0" class="file-previews">
+            <div *ngFor="let preview of filePreviews; let i = index" class="file-preview-item">
+              <div *ngIf="preview.preview" class="image-preview">
+                <img [src]="preview.preview" [alt]="preview.file.name">
+                <button type="button" class="remove-file-btn" (click)="removeFile(i)">×</button>
+              </div>
+              <div *ngIf="!preview.preview" class="file-info">
+                <span class="file-icon">{{ getFileIcon(preview.file.type) }}</span>
+                <div class="file-details">
+                  <span class="file-name">{{ preview.file.name }}</span>
+                  <span class="file-size">{{ formatFileSize(preview.file.size) }}</span>
+                </div>
+                <button type="button" class="remove-file-btn" (click)="removeFile(i)">×</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" routerLink="/tasks" class="cancel-button">Cancel</button>
+          <button type="submit" class="submit-button" [disabled]="isLoading || taskForm.invalid">
+            {{ isLoading ? 'Saving...' : (isEditMode ? 'Update Task' : 'Create Task') }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+

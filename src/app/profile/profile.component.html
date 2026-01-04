@@ -1,0 +1,94 @@
+<div class="modern-container">
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-icon"></div>
+      <a routerLink="/" class="logo-text">MYDAILY</a>
+    </div>
+    <div class="header-right">
+      <a routerLink="/tasks" class="login-link">Tasks</a>
+      <a routerLink="/profile" class="login-link">Profile</a>
+      <a routerLink="/profile" class="username-link">{{ currentUser.username }}</a>
+      <a routerLink="/login" class="login-link">Log Out</a>
+      <div class="menu-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="content-wrapper">
+    <div class="profile-header">
+      <h1 class="page-title">Profile</h1>
+      <p class="page-subtitle">Manage your account information</p>
+    </div>
+
+    <div class="profile-container">
+      <div class="profile-card">
+        <div class="profile-info">
+          <h2 class="user-name">{{ user.name }}</h2>
+          <p class="user-email">{{ user.email }}</p>
+          <p class="user-username">@{{ user.username }}</p>
+        </div>
+      </div>
+
+      <div class="info-section">
+        <div class="info-item">
+          <span class="info-label">Full Name</span>
+          <span class="info-value">{{ user.name }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Email</span>
+          <span class="info-value">{{ user.email }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Username</span>
+          <span class="info-value">{{ user.username }}</span>
+        </div>
+        <div class="info-item">
+          <span class="info-label">Member Since</span>
+          <span class="info-value">{{ user.memberSince | date: 'MMM d, y' }}</span>
+        </div>
+      </div>
+
+      <div class="profile-actions">
+        <button class="action-button">Edit Profile</button>
+        <button class="action-button secondary">Change Password</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="footer-white">
+      <div class="footer-content">
+        <div class="footer-left">
+          <p class="copyright">© 2026 MYDAILY Inc</p>
+        </div>
+        <div class="footer-right">
+          <a href="#" class="footer-link">Terms of Service</a>
+          <a href="#" class="footer-link">Privacy and Cookies</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-yellow">
+      <p class="footer-message">The sun is out. The tasks can wait.</p>
+      <div class="info-boxes">
+        <div class="info-box">
+          <span>{{ currentDate }}</span>
+        </div>
+        <div class="info-box">
+          <span>Mountain View, CA</span>
+        </div>
+        <div class="info-box">
+          <span class="sun-icon">☀</span>
+          <span>57°F</span>
+        </div>
+      </div>
+      <div class="footer-logo">
+        <div class="large-logo-icon"></div>
+      </div>
+    </div>
+  </footer>
+</div>
+

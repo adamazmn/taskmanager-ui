@@ -1,0 +1,295 @@
+<div class="modern-container">
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-icon"></div>
+      <a routerLink="/" class="logo-text">MYDAILY</a>
+    </div>
+    <div class="header-right">
+      <a routerLink="/profile" class="login-link">Profile</a>
+      <a routerLink="/profile" class="username-link">{{ currentUser.username }}</a>
+      <a routerLink="/login" class="login-link">Log Out</a>
+      <div class="menu-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="content-wrapper">
+    <div class="task-header">
+      <div class="task-header-left">
+        <h1 class="page-title">My Tasks</h1>
+        <p class="page-subtitle">Manage your daily tasks and stay organized</p>
+      </div>
+      <button (click)="openModal()" class="create-button">
+        <span>+</span> Create Task
+      </button>
+    </div>
+
+    <div class="filter-section">
+      <div class="filter-group">
+        <label class="filter-label">Status:</label>
+        <div class="filter-buttons-row">
+          <button 
+            class="filter-btn" 
+            [class.active]="filterStatus === 'all'"
+            (click)="onFilterChange('all')">
+            All
+          </button>
+          <button 
+            class="filter-btn" 
+            [class.active]="filterStatus === 'pending'"
+            (click)="onFilterChange('pending')">
+            Pending
+          </button>
+          <button 
+            class="filter-btn" 
+            [class.active]="filterStatus === 'done'"
+            (click)="onFilterChange('done')">
+            Done
+          </button>
+        </div>
+      </div>
+      <div class="filter-group">
+        <label class="filter-label" for="dateAdded">Date Added:</label>
+        <input
+          id="dateAdded"
+          type="date"
+          class="filter-date-input"
+          [value]="filterDateAdded"
+          (change)="onDateAddedChange($any($event.target).value)">
+      </div>
+      <div class="filter-group">
+        <label class="filter-label" for="dueDate">Due Date:</label>
+        <input
+          id="dueDate"
+          type="date"
+          class="filter-date-input"
+          [value]="filterDueDate"
+          (change)="onDueDateChange($any($event.target).value)">
+      </div>
+      <button 
+        *ngIf="filterDateAdded || filterDueDate"
+        class="filter-clear-btn"
+        (click)="clearDateFilters()">
+        Clear Filters
+      </button>
+    </div>
+
+    <div class="tasks-container">
+      <div *ngIf="isLoading" class="loading-state">
+        <p>Loading tasks...</p>
+      </div>
+
+      <div *ngIf="!isLoading && filteredTasks.length === 0" class="empty-state">
+        <p class="empty-message">No tasks found</p>
+        <button (click)="openModal()" class="create-link">Create your first task</button>
+      </div>
+
+      <div *ngIf="!isLoading && filteredTasks.length > 0" class="tasks-list">
+        <div *ngFor="let task of filteredTasks" class="task-card">
+          <div class="task-content">
+            <div class="task-checkbox" (click)="openStatusConfirmModal(task)">
+              <div class="checkbox" [class.checked]="task.status === 'done'">
+                <span *ngIf="task.status === 'done'">✓</span>
+              </div>
+            </div>
+            <div class="task-details">
+              <h3 class="task-title" [class.completed]="task.status === 'done'">
+                {{ task.title }}
+              </h3>
+              <p class="task-description">{{ task.description }}</p>
+              <div class="task-meta">
+                <span class="task-status" [class.pending]="task.status === 'pending'" [class.done]="task.status === 'done'">
+                  {{ task.status === 'pending' ? 'Pending' : 'Done' }}
+                </span>
+                <span *ngIf="task.dueDate" class="task-date">
+                  Due: {{ task.dueDate | date: 'MMM d, y' }}
+                </span>
+                <span class="task-date">
+                  Added: {{ task.createdAt | date: 'MMM d, y' }}
+                </span>
+                <span *ngIf="task.attachments && task.attachments.length > 0" class="task-attachments">
+                  📎 {{ task.attachments.length }} file{{ task.attachments.length > 1 ? 's' : '' }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="task-actions">
+            <a [routerLink]="['/tasks', task.id]" class="action-btn edit-btn">Edit</a>
+            <button class="action-btn delete-btn" (click)="deleteTask(task.id)">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task Creation Modal -->
+  <div *ngIf="showModal" class="modal-overlay" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h2 class="modal-title">Create New Task</h2>
+        <button class="modal-close" (click)="closeModal()">×</button>
+      </div>
+      <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="task-form">
+        <div class="form-group">
+          <label class="form-label" for="title">Title *</label>
+          <input
+            id="title"
+            type="text"
+            formControlName="title"
+            class="form-input"
+            [class.error]="title?.invalid && title?.touched"
+            placeholder="Enter task title">
+          <div *ngIf="title?.invalid && title?.touched" class="error-message">
+            <span *ngIf="title?.errors?.['required']">Title is required</span>
+            <span *ngIf="title?.errors?.['minlength']">Title must be at least 3 characters</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="description">Description *</label>
+          <textarea
+            id="description"
+            formControlName="description"
+            class="form-textarea"
+            [class.error]="description?.invalid && description?.touched"
+            rows="4"
+            placeholder="Enter task description"></textarea>
+          <div *ngIf="description?.invalid && description?.touched" class="error-message">
+            <span *ngIf="description?.errors?.['required']">Description is required</span>
+            <span *ngIf="description?.errors?.['minlength']">Description must be at least 10 characters</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="status">Status *</label>
+          <select
+            id="status"
+            formControlName="status"
+            class="form-select">
+            <option value="pending">Pending</option>
+            <option value="done">Done</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="dueDate">Due Date (Optional)</label>
+          <input
+            id="dueDate"
+            type="date"
+            formControlName="dueDate"
+            class="form-input">
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="attachments">Attachments (Images/Files)</label>
+          <div class="file-upload-area">
+            <input
+              id="attachments"
+              type="file"
+              class="file-input"
+              multiple
+              accept="image/*,.pdf,.doc,.docx,.txt"
+              (change)="onFileSelected($event)">
+            <label for="attachments" class="file-upload-label">
+              <span class="upload-icon">📎</span>
+              <span class="upload-text">Click to upload or drag and drop</span>
+              <span class="upload-hint">Images, PDF, DOC, TXT (Max 10MB per file)</span>
+            </label>
+          </div>
+          <div *ngIf="filePreviews.length > 0" class="file-previews">
+            <div *ngFor="let preview of filePreviews; let i = index" class="file-preview-item">
+              <div *ngIf="preview.preview" class="image-preview">
+                <img [src]="preview.preview" [alt]="preview.file.name">
+                <button type="button" class="remove-file-btn" (click)="removeFile(i)">×</button>
+              </div>
+              <div *ngIf="!preview.preview" class="file-info">
+                <span class="file-icon">{{ getFileIcon(preview.file.type) }}</span>
+                <div class="file-details">
+                  <span class="file-name">{{ preview.file.name }}</span>
+                  <span class="file-size">{{ formatFileSize(preview.file.size) }}</span>
+                </div>
+                <button type="button" class="remove-file-btn" (click)="removeFile(i)">×</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-actions">
+          <button type="button" (click)="closeModal()" class="cancel-button">Cancel</button>
+          <button type="submit" class="submit-button" [disabled]="isLoading || taskForm.invalid">
+            {{ isLoading ? 'Saving...' : 'Create Task' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Status Confirmation Modal -->
+  <app-modal
+    [isOpen]="showStatusConfirmModal"
+    [config]="statusConfirmModalConfig"
+    (close)="closeStatusConfirmModal()"
+    (yes)="onStatusConfirmYes()"
+    (no)="onStatusConfirmNo()">
+  </app-modal>
+
+  <!-- Delete Confirmation Modal -->
+  <app-modal
+    [isOpen]="showDeleteConfirmModal"
+    [config]="deleteConfirmModalConfig"
+    (close)="onDeleteConfirmNo()"
+    (yes)="onDeleteConfirmYes()"
+    (no)="onDeleteConfirmNo()">
+  </app-modal>
+
+  <!-- Success Modal -->
+  <app-modal
+    [isOpen]="showSuccessModal"
+    [config]="successModalConfig"
+    (close)="showSuccessModal = false">
+  </app-modal>
+
+  <!-- Error Modal -->
+  <app-modal
+    [isOpen]="showErrorModal"
+    [config]="errorModalConfig"
+    (close)="showErrorModal = false">
+  </app-modal>
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="footer-white">
+      <div class="footer-content">
+        <div class="footer-left">
+          <p class="copyright">© 2026 MYDAILY Inc</p>
+        </div>
+        <div class="footer-right">
+          <a href="#" class="footer-link">Terms of Service</a>
+          <a href="#" class="footer-link">Privacy and Cookies</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-yellow">
+      <p class="footer-message">The sun is out. The tasks can wait.</p>
+      <div class="info-boxes">
+        <div class="info-box">
+          <span>{{ currentDate }}</span>
+        </div>
+        <div class="info-box">
+          <span>Mountain View, CA</span>
+        </div>
+        <div class="info-box">
+          <span class="sun-icon">☀</span>
+          <span>57°F</span>
+        </div>
+      </div>
+      <div class="footer-logo">
+        <div class="large-logo-icon"></div>
+      </div>
+    </div>
+  </footer>
+</div>
+

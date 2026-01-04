@@ -1,0 +1,104 @@
+<div class="modern-container">
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-icon"></div>
+      <a routerLink="/" class="logo-text">MYDAILY</a>
+    </div>
+    <div class="header-right">
+      <div class="menu-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="content-wrapper">
+    <div class="text-section">
+      <p class="subtitle">Welcome back</p>
+      <h1 class="main-headline">Log in to MYDAILY</h1>
+    </div>
+
+    <div class="form-section">
+      <div *ngIf="!showForgot" class="login-form-wrapper">
+        <form (submit)="$event.preventDefault(); login()" class="modern-form">
+          <div class="form-group">
+            <label class="form-label">Username</label>
+            <input class="form-input" type="text" [(ngModel)]="username" name="username" required>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input class="form-input" type="password" [(ngModel)]="password" name="password" required>
+          </div>
+          <button class="modern-button" type="submit">Log In</button>
+          <div class="form-links">
+            <a routerLink="/signup" class="form-link">First time? Sign Up</a>
+            <span class="link-separator">•</span>
+            <a (click)="showForgot=true" href="#" class="form-link">Forgot Password?</a>
+          </div>
+        </form>
+      </div>
+
+      <div *ngIf="showForgot" class="login-form-wrapper">
+        <form (submit)="$event.preventDefault(); forgotPassword(); showForgot=false" class="modern-form">
+          <div class="form-group">
+            <label class="form-label">Enter your Username</label>
+            <input class="form-input" type="text" [(ngModel)]="username" name="forgot-username" required>
+          </div>
+          <button class="modern-button" type="submit">Send Reset Link</button>
+          <div class="form-links">
+            <a (click)="showForgot=false" href="#" class="form-link">Back</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal -->
+  <app-modal
+    [isOpen]="showSuccessModal"
+    [config]="successModalConfig"
+    (close)="showSuccessModal = false">
+  </app-modal>
+
+  <!-- Error Modal -->
+  <app-modal
+    [isOpen]="showErrorModal"
+    [config]="errorModalConfig"
+    (close)="showErrorModal = false">
+  </app-modal>
+
+  <!-- Footer Section -->
+  <footer class="footer">
+    <div class="footer-white">
+      <div class="footer-content">
+        <div class="footer-left">
+          <p class="copyright">© 2026 MYDAILY Inc</p>
+        </div>
+        <div class="footer-right">
+          <a href="#" class="footer-link">Terms of Service</a>
+          <a href="#" class="footer-link">Privacy and Cookies</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-yellow">
+      <p class="footer-message">The sun is out. The tasks can wait.</p>
+      <div class="info-boxes">
+        <div class="info-box">
+          <span>{{ currentDate }}</span>
+        </div>
+        <div class="info-box">
+          <span>Mountain View, CA</span>
+        </div>
+        <div class="info-box">
+          <span class="sun-icon">☀</span>
+          <span>57°F</span>
+        </div>
+      </div>
+      <div class="footer-logo">
+        <div class="large-logo-icon"></div>
+      </div>
+    </div>
+  </footer>
+</div>
+

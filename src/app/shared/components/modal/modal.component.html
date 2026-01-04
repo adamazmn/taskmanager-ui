@@ -1,0 +1,42 @@
+<div *ngIf="isOpen" class="modal-overlay" (click)="onOverlayClick()">
+  <div class="modal-content" (click)="onModalClick($event)">
+    <div class="modal-header" *ngIf="config.title || config.type">
+      <h2 class="modal-title">{{ modalTitle }}</h2>
+      <button *ngIf="config.showClose !== false" class="modal-close" (click)="onClose()">×</button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="modal-icon-container">
+        <div class="modal-icon" [ngClass]="modalIconClass">
+          <span class="icon-symbol">{{ modalIcon }}</span>
+        </div>
+      </div>
+      <p class="modal-message">{{ config.message }}</p>
+    </div>
+
+    <div class="modal-actions">
+      <button 
+        *ngIf="config.showNo" 
+        type="button" 
+        class="modal-btn modal-btn-no" 
+        (click)="onNo()">
+        {{ config.noText || 'No' }}
+      </button>
+      <button 
+        *ngIf="config.showYes" 
+        type="button" 
+        class="modal-btn modal-btn-yes" 
+        (click)="onYes()">
+        {{ config.yesText || 'Yes' }}
+      </button>
+      <button 
+        *ngIf="config.showClose !== false" 
+        type="button" 
+        class="modal-btn modal-btn-close" 
+        (click)="onClose()">
+        {{ config.closeText || 'Close' }}
+      </button>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,88 @@
+<div class="modern-container">
+  <header class="header">
+    <div class="header-left">
+      <div class="logo-icon"></div>
+      <a routerLink="/" class="logo-text">MYDAILY</a>
+    </div>
+
+    <div class="header-right">
+      <a routerLink="/login" class="login-link">Log In</a>
+      <div class="menu-icon">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+
+  <div class="content-wrapper">
+    <div class="hero-section">
+      <p class="subtitle">The helpful task management app</p>
+      <p class="subtitle-secondary">Beta launching 2026</p>
+      <h1 class="main-headline">Say hello to MYDAILY</h1>
+      <p class="description">Built for busy households, MYDAILY works 24/7 to make your life lighter. Hand off your repetitive to-do's, so you can focus on what really matters.</p>
+    </div>
+
+    <div class="visual-section">
+      <div class="visual-container">
+        <!-- Replace src with your actual video URL -->
+        <video class="hero-video" autoplay muted loop playsinline>
+          <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+          <!-- Add fallback image if video fails to load -->
+          <img src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=1200&h=800&fit=crop" 
+               alt="MYDAILY Task Management App" 
+               class="hero-image">
+        </video>
+        
+        <!-- Alternative: Use image instead of video -->
+        <!-- 
+        <img src="your-image.jpg" 
+             alt="MYDAILY Task Management App" 
+             class="hero-image">
+        -->
+        
+        <div class="image-overlay"></div>
+      </div>
+      <div class="cta-overlay">
+        <div class="cta-pill">
+          <span class="cta-text">Be one of 50 Founding Families</span>
+          <a routerLink="/signup" class="cta-action">Reserve now •</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer Section -->
+    <footer class="footer">
+      <div class="footer-white">
+        <div class="footer-content">
+          <div class="footer-left">
+            <p class="copyright">© 2026 MYDAILY Inc</p>
+          </div>
+          <div class="footer-right">
+            <a href="#" class="footer-link">Terms of Service</a>
+            <a href="#" class="footer-link">Privacy and Cookies</a>
+          </div>
+        </div>
+      </div>
+      <div class="footer-yellow">
+        <p class="footer-message">The sun is out. The tasks can wait.</p>
+        <div class="info-boxes">
+          <div class="info-box">
+            <span>{{ currentDate }}</span>
+          </div>
+          <div class="info-box">
+            <span>Mountain View, CA</span>
+          </div>
+          <div class="info-box">
+            <span class="sun-icon">☀</span>
+            <span>57°F</span>
+          </div>
+        </div>
+        <div class="footer-logo">
+          <div class="large-logo-icon"></div>
+        </div>
+      </div>
+    </footer>
+  </div>
+</div>
+
