@@ -2,87 +2,44 @@ import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
-import { ModalComponent, ModalConfig } from '../shared/components/modal/modal.component';
 
 @Component({
-  selector: 'login-form',
+  selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule, ModalComponent],
+  imports: [CommonModule, FormsModule, RouterModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
 export class LoginComponent implements OnInit {
   username = '';
   password = '';
-  showForgot = false;
-  currentDate: string = '';
-  showSuccessModal = false;
-  showErrorModal = false;
-  successModalConfig: ModalConfig = {
-    type: 'success',
-    message: '',
-    showClose: true
-  };
-  errorModalConfig: ModalConfig = {
-    type: 'error',
-    message: '',
-    showClose: true
-  };
-
+  rememberMe = false;
+  
   constructor(private router: Router) {}
 
   ngOnInit(): void {
-    this.updateDate();
+    // Theme initialization if needed
   }
 
-  updateDate(): void {
-    const now = new Date();
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      month: 'short', 
-      day: 'numeric' 
-    };
-    this.currentDate = now.toLocaleDateString('en-US', options);
+  toggleTheme() {
+    const htmlElement = document.documentElement;
+    if (htmlElement.classList.contains('dark')) {
+      htmlElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    } else {
+      htmlElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    }
+  }
+
+  isDarkMode(): boolean {
+    return document.documentElement.classList.contains('dark');
   }
 
   login() {
-    if (!this.username || !this.password) {
-      this.showErrorModal = true;
-      this.errorModalConfig = {
-        type: 'error',
-        message: 'Please enter both username and password.',
-        showClose: true
-      };
-      return;
-    }
-    // Dummy method for now
-    this.showSuccessModal = true;
-    this.successModalConfig = {
-      type: 'success',
-      message: `Logged in as ${this.username}`,
-      showClose: true
-    };
-    // In a real app, navigate after successful login
-    // setTimeout(() => this.router.navigate(['/tasks']), 1500);
-  }
-
-  forgotPassword() {
-    if (!this.username) {
-      this.showErrorModal = true;
-      this.errorModalConfig = {
-        type: 'error',
-        message: 'Please enter your username first.',
-        showClose: true
-      };
-      return;
-    }
-    // Dummy forgot password
-    this.showSuccessModal = true;
-    this.successModalConfig = {
-      type: 'success',
-      message: 'Reset password link sent!',
-      showClose: true
-    };
+    console.log('Login attempt:', { username: this.username, password: this.password, rememberMe: this.rememberMe });
+    // Navigate to tasks or home on success
+    this.router.navigate(['/']);
   }
 }
 

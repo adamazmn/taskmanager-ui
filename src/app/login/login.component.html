@@ -1,104 +1,98 @@
-<div class="modern-container">
-  <header class="header">
-    <div class="header-left">
-      <div class="logo-icon"></div>
-      <a routerLink="/" class="logo-text">MYDAILY</a>
-    </div>
-    <div class="header-right">
-      <div class="menu-icon">
-        <span></span>
-        <span></span>
-        <span></span>
+<div
+  class="relative min-h-screen flex flex-col bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 transition-colors duration-300 overflow-hidden">
+  <div class="blur-dot top-[-10%] left-[-10%]"></div>
+  <div class="blur-dot bottom-[-10%] right-[-10%]"></div>
+
+  <nav class="w-full px-6 py-8 flex justify-between items-center max-w-7xl mx-auto z-10">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-primary dark:bg-white rounded-full flex items-center justify-center">
+        <span class="text-white dark:text-primary text-xs font-bold">M</span>
       </div>
+      <a routerLink="/" class="font-display font-bold text-xl tracking-tight uppercase">MYDAILY</a>
     </div>
-  </header>
-
-  <div class="content-wrapper">
-    <div class="text-section">
-      <p class="subtitle">Welcome back</p>
-      <h1 class="main-headline">Log in to MYDAILY</h1>
+    <div>
+      <a href="#" class="text-sm font-medium hover:opacity-70 transition-opacity">Contact Support</a>
     </div>
+  </nav>
 
-    <div class="form-section">
-      <div *ngIf="!showForgot" class="login-form-wrapper">
-        <form (submit)="$event.preventDefault(); login()" class="modern-form">
-          <div class="form-group">
-            <label class="form-label">Username</label>
-            <input class="form-input" type="text" [(ngModel)]="username" name="username" required>
+  <main class="flex-grow flex items-center justify-center px-6 py-12 z-10">
+    <div class="w-full max-w-md">
+      <div class="text-center mb-10">
+        <h1 class="text-4xl font-semibold tracking-tight mb-3">Welcome back.</h1>
+        <p class="text-slate-500 dark:text-slate-400 text-sm">Manage your daily tasks with precision.</p>
+      </div>
+
+      <div
+        class="bg-white dark:bg-zinc-900/50 border border-slate-200 dark:border-zinc-800 p-8 rounded-2xl shadow-sm backdrop-blur-sm">
+        <form (submit)="$event.preventDefault(); login()" class="space-y-6">
+          <div>
+            <label for="username"
+              class="block text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-2">Username</label>
+            <div class="relative">
+              <input [(ngModel)]="username" name="username" type="text" id="username"
+                class="w-full bg-slate-50 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 rounded-lg px-4 py-3 focus:ring-primary focus:border-primary dark:focus:ring-white dark:focus:border-white transition-all outline-none"
+                placeholder="Enter your username">
+              <span
+                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">person</span>
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Password</label>
-            <input class="form-input" type="password" [(ngModel)]="password" name="password" required>
+
+          <div>
+            <div class="flex justify-between items-center mb-2">
+              <label for="password"
+                class="block text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Password</label>
+              <a href="#" class="text-xs font-medium text-primary dark:text-white hover:underline">Forgot password?</a>
+            </div>
+            <div class="relative">
+              <input [(ngModel)]="password" name="password" type="password" id="password"
+                class="w-full bg-slate-50 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 rounded-lg px-4 py-3 focus:ring-primary focus:border-primary dark:focus:ring-white dark:focus:border-white transition-all outline-none"
+                placeholder="••••••••">
+              <span
+                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">lock</span>
+            </div>
           </div>
-          <button class="modern-button" type="submit">Log In</button>
-          <div class="form-links">
-            <a routerLink="/signup" class="form-link">First time? Sign Up</a>
-            <span class="link-separator">•</span>
-            <a (click)="showForgot=true" href="#" class="form-link">Forgot Password?</a>
+
+          <div class="flex items-center">
+            <input [(ngModel)]="rememberMe" name="remember" id="remember" type="checkbox"
+              class="w-4 h-4 rounded border-slate-300 dark:border-zinc-700 text-primary focus:ring-primary">
+            <label for="remember" class="ml-2 text-sm text-slate-600 dark:text-slate-400">Remember me for 30
+              days</label>
           </div>
+
+          <button type="submit"
+            class="w-full bg-primary dark:bg-white text-white dark:text-black font-semibold py-4 rounded-lg hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+            Login
+            <span class="material-symbols-outlined text-xl">arrow_forward</span>
+          </button>
         </form>
+
+
       </div>
 
-      <div *ngIf="showForgot" class="login-form-wrapper">
-        <form (submit)="$event.preventDefault(); forgotPassword(); showForgot=false" class="modern-form">
-          <div class="form-group">
-            <label class="form-label">Enter your Username</label>
-            <input class="form-input" type="text" [(ngModel)]="username" name="forgot-username" required>
-          </div>
-          <button class="modern-button" type="submit">Send Reset Link</button>
-          <div class="form-links">
-            <a (click)="showForgot=false" href="#" class="form-link">Back</a>
-          </div>
-        </form>
-      </div>
+      <p class="text-center mt-8 text-sm text-slate-500 dark:text-slate-400">
+        New to the system? <a routerLink="/signup"
+          class="text-primary dark:text-white font-semibold hover:underline">Create an account</a>
+      </p>
     </div>
-  </div>
+  </main>
 
-  <!-- Success Modal -->
-  <app-modal
-    [isOpen]="showSuccessModal"
-    [config]="successModalConfig"
-    (close)="showSuccessModal = false">
-  </app-modal>
-
-  <!-- Error Modal -->
-  <app-modal
-    [isOpen]="showErrorModal"
-    [config]="errorModalConfig"
-    (close)="showErrorModal = false">
-  </app-modal>
-
-  <!-- Footer Section -->
-  <footer class="footer">
-    <div class="footer-white">
-      <div class="footer-content">
-        <div class="footer-left">
-          <p class="copyright">© 2026 MYDAILY Inc</p>
-        </div>
-        <div class="footer-right">
-          <a href="#" class="footer-link">Terms of Service</a>
-          <a href="#" class="footer-link">Privacy and Cookies</a>
-        </div>
+  <footer class="w-full px-6 py-8 mt-auto border-t border-slate-100 dark:border-zinc-900 z-10">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4">
+      <div class="flex items-center gap-6 text-xs text-slate-400 uppercase tracking-widest font-medium">
+        <a href="#" class="hover:text-primary dark:hover:text-white transition-colors">Privacy Policy</a>
+        <a href="#" class="hover:text-primary dark:hover:text-white transition-colors">Terms of Service</a>
+        <a href="#" class="hover:text-primary dark:hover:text-white transition-colors">Security</a>
       </div>
-    </div>
-    <div class="footer-yellow">
-      <p class="footer-message">The sun is out. The tasks can wait.</p>
-      <div class="info-boxes">
-        <div class="info-box">
-          <span>{{ currentDate }}</span>
-        </div>
-        <div class="info-box">
-          <span>Mountain View, CA</span>
-        </div>
-        <div class="info-box">
-          <span class="sun-icon">☀</span>
-          <span>57°F</span>
-        </div>
+      <div class="text-xs text-slate-400 font-medium">
+        © 2024 MYDAILY ROBOTICS INC.
       </div>
-      <div class="footer-logo">
-        <div class="large-logo-icon"></div>
+      <div class="flex gap-4">
+        <button (click)="toggleTheme()" id="theme-toggle"
+          class="p-2 rounded-full border border-slate-200 dark:border-zinc-800 hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors">
+          <span class="material-symbols-outlined text-lg block dark:hidden">dark_mode</span>
+          <span class="material-symbols-outlined text-lg hidden dark:block">light_mode</span>
+        </button>
       </div>
     </div>
   </footer>
 </div>
-

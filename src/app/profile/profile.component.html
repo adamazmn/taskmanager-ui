@@ -1,94 +1,188 @@
-<div class="modern-container">
-  <header class="header">
-    <div class="header-left">
-      <div class="logo-icon"></div>
-      <a routerLink="/" class="logo-text">MYDAILY</a>
-    </div>
-    <div class="header-right">
-      <a routerLink="/tasks" class="login-link">Tasks</a>
-      <a routerLink="/profile" class="login-link">Profile</a>
-      <a routerLink="/profile" class="username-link">{{ currentUser.username }}</a>
-      <a routerLink="/login" class="login-link">Log Out</a>
-      <div class="menu-icon">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
-    </div>
-  </header>
+<div
+  class="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark text-primary dark:text-gray-100 transition-colors duration-300">
 
-  <div class="content-wrapper">
-    <div class="profile-header">
-      <h1 class="page-title">Profile</h1>
-      <p class="page-subtitle">Manage your account information</p>
-    </div>
-
-    <div class="profile-container">
-      <div class="profile-card">
-        <div class="profile-info">
-          <h2 class="user-name">{{ user.name }}</h2>
-          <p class="user-email">{{ user.email }}</p>
-          <p class="user-username">@{{ user.username }}</p>
+  <!-- Sidebar -->
+  <aside
+    class="w-64 border-r border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-black/20 backdrop-blur-md z-50 hidden lg:flex flex-col h-full">
+    <div class="p-8 flex-1 flex flex-col h-full">
+      <div class="mb-12 flex items-center gap-3">
+        <div class="w-8 h-8 bg-primary dark:bg-white rounded-full flex items-center justify-center">
+          <span class="text-white dark:text-primary text-xs font-bold">M</span>
         </div>
+        <h1 class="display-font text-xl font-semibold tracking-tight uppercase">MYDAILY</h1>
       </div>
 
-      <div class="info-section">
-        <div class="info-item">
-          <span class="info-label">Full Name</span>
-          <span class="info-value">{{ user.name }}</span>
+      <nav class="flex-1 space-y-6">
+        <div>
+          <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-4 font-semibold">Overview</p>
+          <ul class="space-y-1">
+            <li>
+              <a routerLink="/dashboard"
+                class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-xl">dashboard</span> Dashboard
+              </a>
+            </li>
+            <li>
+              <a routerLink="/tasks"
+                class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-xl">assignment</span> Tasks
+              </a>
+            </li>
+            <li>
+              <a href="#"
+                class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-xl">insights</span> Analytics
+              </a>
+            </li>
+          </ul>
         </div>
-        <div class="info-item">
-          <span class="info-label">Email</span>
-          <span class="info-value">{{ user.email }}</span>
+        <div>
+          <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-4 font-semibold">System</p>
+          <ul class="space-y-1">
+            <li>
+              <a routerLink="/profile"
+                class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 transition-colors">
+                <span class="material-symbols-outlined text-xl">person</span> Profile
+              </a>
+            </li>
+            <li>
+              <a href="#"
+                class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors">
+                <span class="material-symbols-outlined text-xl">settings</span> Settings
+              </a>
+            </li>
+          </ul>
         </div>
-        <div class="info-item">
-          <span class="info-label">Username</span>
-          <span class="info-value">{{ user.username }}</span>
-        </div>
-        <div class="info-item">
-          <span class="info-label">Member Since</span>
-          <span class="info-value">{{ user.memberSince | date: 'MMM d, y' }}</span>
-        </div>
-      </div>
+      </nav>
 
-      <div class="profile-actions">
-        <button class="action-button">Edit Profile</button>
-        <button class="action-button secondary">Change Password</button>
+      <div class="pt-8 border-t border-gray-100 dark:border-gray-800 mt-auto">
+        <button (click)="toggleTheme()"
+          class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors w-full text-left">
+          <span class="material-symbols-outlined text-xl">dark_mode</span> Appearance
+        </button>
       </div>
     </div>
-  </div>
+  </aside>
 
-  <!-- Footer Section -->
-  <footer class="footer">
-    <div class="footer-white">
-      <div class="footer-content">
-        <div class="footer-left">
-          <p class="copyright">© 2026 MYDAILY Inc</p>
-        </div>
-        <div class="footer-right">
-          <a href="#" class="footer-link">Terms of Service</a>
-          <a href="#" class="footer-link">Privacy and Cookies</a>
+  <!-- Main Content -->
+  <main class="flex-1 h-full overflow-y-auto p-6 lg:p-12 relative">
+    <header class="flex justify-between items-center mb-10">
+      <div>
+        <h2 class="display-font text-3xl font-light tracking-tight">Profile Settings</h2>
+        <p class="text-gray-400 text-sm mt-1">Manage your account and preferences</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <button
+          class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+          <span class="material-symbols-outlined">notifications</span>
+        </button>
+        <div class="h-10 w-10 bg-accent rounded-full flex items-center justify-center text-white overflow-hidden">
+          <span class="font-bold text-lg">{{ user.name.charAt(0) }}</span>
         </div>
       </div>
-    </div>
-    <div class="footer-yellow">
-      <p class="footer-message">The sun is out. The tasks can wait.</p>
-      <div class="info-boxes">
-        <div class="info-box">
-          <span>{{ currentDate }}</span>
+    </header>
+
+    <section class="max-w-4xl mx-auto">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Profile Card -->
+        <div class="lg:col-span-1">
+          <div
+            class="bg-white dark:bg-white/5 p-6 rounded-xl border border-gray-100 dark:border-gray-800 flex flex-col items-center text-center">
+            <div class="relative mb-4 group cursor-pointer">
+              <div
+                class="w-24 h-24 rounded-full bg-accent flex items-center justify-center text-white text-3xl font-bold overflow-hidden border-4 border-white dark:border-gray-800 shadow-lg">
+                {{ user.name.charAt(0) }}
+              </div>
+              <div
+                class="absolute inset-0 bg-black/40 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <span class="material-symbols-outlined text-white">edit</span>
+              </div>
+            </div>
+            <h3 class="display-font text-xl font-medium">{{ user.name }}</h3>
+            <p class="text-sm text-gray-400 mb-6">@{{ user.username }}</p>
+
+            <div class="w-full flex justify-between px-4 py-4 bg-gray-50 dark:bg-white/5 rounded-lg mb-6">
+              <div class="flex flex-col">
+                <span class="font-bold text-lg">142</span>
+                <span class="text-[10px] uppercase text-gray-400 tracking-wider">Tasks</span>
+              </div>
+              <div class="w-px bg-gray-200 dark:bg-gray-700"></div>
+              <div class="flex flex-col">
+                <span class="font-bold text-lg">85%</span>
+                <span class="text-[10px] uppercase text-gray-400 tracking-wider">Rate</span>
+              </div>
+              <div class="w-px bg-gray-200 dark:bg-gray-700"></div>
+              <div class="flex flex-col">
+                <span class="font-bold text-lg">2yr</span>
+                <span class="text-[10px] uppercase text-gray-400 tracking-wider">Member</span>
+              </div>
+            </div>
+
+            <button
+              class="w-full py-2.5 bg-primary dark:bg-white text-white dark:text-primary rounded-lg text-sm font-medium hover:opacity-90 transition-opacity">
+              Upload New Picture
+            </button>
+          </div>
         </div>
-        <div class="info-box">
-          <span>Mountain View, CA</span>
-        </div>
-        <div class="info-box">
-          <span class="sun-icon">☀</span>
-          <span>57°F</span>
+
+        <!-- Settings Form -->
+        <div class="lg:col-span-2 space-y-6">
+          <div class="bg-white dark:bg-white/5 p-8 rounded-xl border border-gray-100 dark:border-gray-800">
+            <h4 class="display-font text-lg font-medium mb-6">Account Information</h4>
+            <div class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Full
+                    Name</label>
+                  <input type="text" [value]="user.name"
+                    class="w-full px-4 py-3 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-accent dark:focus:border-accent transition-colors"
+                    placeholder="Full Name">
+                </div>
+                <div>
+                  <label
+                    class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Username</label>
+                  <input type="text" [value]="user.username"
+                    class="w-full px-4 py-3 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-accent dark:focus:border-accent transition-colors"
+                    placeholder="Username">
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">Email
+                  Address</label>
+                <input type="email" [value]="user.email"
+                  class="w-full px-4 py-3 bg-gray-50 dark:bg-white/5 border border-gray-200 dark:border-gray-700 rounded-lg text-sm focus:outline-none focus:border-accent dark:focus:border-accent transition-colors"
+                  placeholder="Email Address">
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-white/5 p-8 rounded-xl border border-gray-100 dark:border-gray-800">
+            <h4 class="display-font text-lg font-medium mb-6">Security</h4>
+            <button
+              class="flex items-center justify-between w-full px-5 py-4 bg-gray-50 dark:bg-white/5 rounded-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-colors group">
+              <div class="flex items-center gap-3">
+                <span
+                  class="material-symbols-outlined text-gray-400 group-hover:text-primary dark:group-hover:text-white transition-colors">lock</span>
+                <span class="text-sm font-medium">Change Password</span>
+              </div>
+              <span class="material-symbols-outlined text-gray-400 text-sm">arrow_forward_ios</span>
+            </button>
+          </div>
+
+          <div class="flex justify-end pt-4">
+            <button
+              class="px-8 py-3 bg-accent text-white rounded-lg text-sm font-medium hover:bg-accent/90 transition-colors shadow-lg shadow-accent/20">
+              Save Changes
+            </button>
+          </div>
         </div>
       </div>
-      <div class="footer-logo">
-        <div class="large-logo-icon"></div>
-      </div>
-    </div>
-  </footer>
+    </section>
+  </main>
+
+  <!-- Mobile Menu Button -->
+  <button
+    class="fixed bottom-6 right-6 lg:hidden w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center z-[100]">
+    <span class="material-symbols-outlined">menu</span>
+  </button>
 </div>
-
