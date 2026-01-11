@@ -31,7 +31,7 @@
             <div class="relative">
               <input [(ngModel)]="username" name="username" type="text" id="username"
                 class="w-full bg-slate-50 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 rounded-lg px-4 py-3 focus:ring-primary focus:border-primary dark:focus:ring-white dark:focus:border-white transition-all outline-none"
-                placeholder="Enter your username">
+                placeholder="Enter your username" [disabled]="isLoading">
               <span
                 class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">person</span>
             </div>
@@ -46,7 +46,7 @@
             <div class="relative">
               <input [(ngModel)]="password" name="password" type="password" id="password"
                 class="w-full bg-slate-50 dark:bg-zinc-800/50 border-slate-200 dark:border-zinc-700 rounded-lg px-4 py-3 focus:ring-primary focus:border-primary dark:focus:ring-white dark:focus:border-white transition-all outline-none"
-                placeholder="••••••••">
+                placeholder="••••••••" [disabled]="isLoading">
               <span
                 class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">lock</span>
             </div>
@@ -59,13 +59,12 @@
               days</label>
           </div>
 
-          <button type="submit"
-            class="w-full bg-primary dark:bg-white text-white dark:text-black font-semibold py-4 rounded-lg hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
-            Login
-            <span class="material-symbols-outlined text-xl">arrow_forward</span>
+          <button type="submit" [disabled]="isLoading"
+            class="w-full bg-primary dark:bg-white text-white dark:text-black font-semibold py-4 rounded-lg hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50">
+            {{ isLoading ? 'Processing...' : 'Login' }}
+            <span *ngIf="!isLoading" class="material-symbols-outlined text-xl">arrow_forward</span>
           </button>
         </form>
-
 
       </div>
 
@@ -95,4 +94,8 @@
       </div>
     </div>
   </footer>
+
+  <!-- Notification Modal -->
+  <app-modal class="relative z-[9999]" [isOpen]="isModalOpen" [config]="modalConfig" (close)="handleModalClose()">
+  </app-modal>
 </div>

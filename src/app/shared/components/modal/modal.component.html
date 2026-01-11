@@ -1,42 +1,51 @@
-<div *ngIf="isOpen" class="modal-overlay" (click)="onOverlayClick()">
-  <div class="modal-content" (click)="onModalClick($event)">
-    <div class="modal-header" *ngIf="config.title || config.type">
-      <h2 class="modal-title">{{ modalTitle }}</h2>
-      <button *ngIf="config.showClose !== false" class="modal-close" (click)="onClose()">×</button>
-    </div>
-    
-    <div class="modal-body">
-      <div class="modal-icon-container">
-        <div class="modal-icon" [ngClass]="modalIconClass">
-          <span class="icon-symbol">{{ modalIcon }}</span>
-        </div>
-      </div>
-      <p class="modal-message">{{ config.message }}</p>
+<div *ngIf="isOpen"
+  class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/40 backdrop-blur-sm transition-all duration-300"
+  (click)="onOverlayClick()">
+
+  <div
+    class="w-full max-w-[420px] bg-white dark:bg-background-dark border border-[#e2e8f0] dark:border-gray-800 rounded-xl shadow-[0_20px_50px_rgba(0,0,0,0.08)] p-10 flex flex-col items-center text-center transform transition-all duration-300 scale-100"
+    (click)="onModalClick($event)">
+
+    <!-- Icon Container -->
+    <div [ngClass]="modalIconContainerClass" class="mb-6 flex items-center justify-center size-20 rounded-full">
+      <span class="material-symbols-outlined !text-5xl">
+        {{ modalIcon }}
+      </span>
     </div>
 
-    <div class="modal-actions">
-      <button 
-        *ngIf="config.showNo" 
-        type="button" 
-        class="modal-btn modal-btn-no" 
-        (click)="onNo()">
-        {{ config.noText || 'No' }}
-      </button>
-      <button 
-        *ngIf="config.showYes" 
-        type="button" 
-        class="modal-btn modal-btn-yes" 
-        (click)="onYes()">
-        {{ config.yesText || 'Yes' }}
-      </button>
-      <button 
-        *ngIf="config.showClose !== false" 
-        type="button" 
-        class="modal-btn modal-btn-close" 
-        (click)="onClose()">
-        {{ config.closeText || 'Close' }}
-      </button>
+    <!-- Title -->
+    <h2 class="text-[#111318] dark:text-white tracking-tight text-[28px] font-bold leading-tight mb-3">
+      {{ modalTitle }}
+    </h2>
+
+    <!-- Message -->
+    <p class="text-gray-500 dark:text-gray-400 text-base font-normal leading-relaxed mb-8">
+      {{ config.message }}
+    </p>
+
+    <!-- Actions -->
+    <div class="w-full flex flex-col gap-3 items-center">
+      <div class="w-full max-w-[280px]" *ngIf="config.showYes">
+        <button (click)="onYes()"
+          class="w-full flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-black dark:bg-white text-white dark:text-black text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
+          <span class="truncate">{{ config.yesText || 'Proceed' }}</span>
+        </button>
+      </div>
+
+      <div class="w-full max-w-[280px]" *ngIf="config.showNo">
+        <button (click)="onNo()"
+          class="w-full flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-4 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors">
+          <span class="truncate">{{ config.noText || 'Cancel' }}</span>
+        </button>
+      </div>
+
+      <div class="w-full max-w-[280px]" *ngIf="config.showClose !== false && !config.showYes">
+        <button (click)="onClose()"
+          class="w-full flex cursor-pointer items-center justify-center overflow-hidden rounded-lg h-12 px-6 bg-black dark:bg-white text-white dark:text-black text-sm font-bold leading-normal tracking-[0.015em] hover:bg-gray-800 dark:hover:bg-gray-200 transition-colors">
+          <span class="truncate">{{ config.closeText || 'Close' }}</span>
+        </button>
+      </div>
     </div>
+
   </div>
 </div>
-
