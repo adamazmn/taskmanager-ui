@@ -55,12 +55,17 @@
                 </div>
             </nav>
 
-            <div class="pt-8 border-t border-gray-100 dark:border-gray-800 mt-auto">
+            <div class="pt-8 border-t border-gray-100 dark:border-gray-800 mt-auto space-y-2">
                 <button (click)="toggleTheme()"
-                    class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors w-full text-left">
+                    class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors w-full text-left rounded-lg hover:bg-gray-100 dark:hover:bg-white/10">
                     <span class="material-symbols-outlined text-xl">dark_mode</span> Appearance
                 </button>
+                <button (click)="logout()"
+                    class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors w-full text-left rounded-lg">
+                    <span class="material-symbols-outlined text-xl">logout</span> Logout
+                </button>
             </div>
+
         </div>
     </aside>
 
@@ -68,8 +73,8 @@
     <main class="flex-1 h-full overflow-y-auto p-6 lg:p-12 relative">
         <header class="flex justify-between items-center mb-16">
             <div>
-                <h2 class="display-font text-3xl font-light tracking-tight">Today’s Overview</h2>
-                <p class="text-gray-400 text-sm mt-1">Monday, October 24</p>
+                <h2 class="display-font text-3xl font-light tracking-tight">Welcome, {{ userName }}</h2>
+                <p class="text-gray-400 text-sm mt-1">Today's Overview</p>
             </div>
             <div class="flex items-center gap-4">
                 <button
@@ -89,7 +94,7 @@
                 class="bg-white dark:bg-white/5 p-10 rounded-xl border border-gray-100 dark:border-gray-800 relative overflow-hidden group">
                 <div class="relative z-10">
                     <p class="text-xs uppercase tracking-widest text-gray-400 mb-2 font-semibold">Pending Tasks</p>
-                    <h3 class="display-font text-7xl font-light">12</h3>
+                    <h3 class="display-font text-7xl font-light">{{ pendingTasksCount }}</h3>
                     <div class="mt-6 flex items-center gap-2 text-accent">
                         <span class="material-symbols-outlined text-sm">trending_up</span>
                         <span class="text-xs font-medium">+2 since yesterday</span>
@@ -103,7 +108,7 @@
                 class="bg-white dark:bg-white/5 p-10 rounded-xl border border-gray-100 dark:border-gray-800 relative overflow-hidden group">
                 <div class="relative z-10">
                     <p class="text-xs uppercase tracking-widest text-gray-400 mb-2 font-semibold">Completed Today</p>
-                    <h3 class="display-font text-7xl font-light">28</h3>
+                    <h3 class="display-font text-7xl font-light">{{ completedTodayCount }}</h3>
                     <div class="mt-6 flex items-center gap-2 text-emerald-500">
                         <span class="material-symbols-outlined text-sm">check_circle</span>
                         <span class="text-xs font-medium">85% of daily goal reached</span>
@@ -131,34 +136,21 @@
                         </div>
                     </div>
                     <div class="h-64 flex items-end justify-between gap-2 px-2">
-                        <div
-                            class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-[40%] transition-all hover:bg-accent hover:h-[45%]">
+                        <div *ngFor="let item of weeklyActivity"
+                            class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg transition-all hover:bg-accent relative group"
+                            [style.height]="item.height">
+                            <!-- Tooltip -->
+                            <div
+                                class="absolute -top-8 left-1/2 -translate-x-1/2 bg-black dark:bg-white text-white dark:text-black text-xs px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                                {{ item.count }} tasks
+                            </div>
                         </div>
-                        <div
-                            class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-[65%] transition-all hover:bg-accent hover:h-[70%]">
-                        </div>
-                        <div
-                            class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-[30%] transition-all hover:bg-accent hover:h-[35%]">
-                        </div>
-                        <div
-                            class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-[85%] transition-all hover:bg-accent hover:h-[90%]">
-                        </div>
-                        <div
-                            class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-[55%] transition-all hover:bg-accent hover:h-[60%]">
-                        </div>
-                        <div
-                            class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-[95%] transition-all hover:bg-accent hover:h-[100%]">
-                        </div>
-                        <div class="w-full bg-primary dark:bg-white rounded-t-lg h-[75%] transition-all"></div>
                     </div>
                     <div class="flex justify-between mt-4 px-2">
-                        <span class="text-[10px] uppercase font-bold text-gray-400">Mon</span>
-                        <span class="text-[10px] uppercase font-bold text-gray-400">Tue</span>
-                        <span class="text-[10px] uppercase font-bold text-gray-400">Wed</span>
-                        <span class="text-[10px] uppercase font-bold text-gray-400">Thu</span>
-                        <span class="text-[10px] uppercase font-bold text-gray-400">Fri</span>
-                        <span class="text-[10px] uppercase font-bold text-gray-400">Sat</span>
-                        <span class="text-[10px] uppercase font-bold text-gray-400">Sun</span>
+                        <span *ngFor="let item of weeklyActivity"
+                            class="text-[10px] uppercase font-bold text-gray-400 w-full text-center">
+                            {{ item.day }}
+                        </span>
                     </div>
                 </div>
 
@@ -170,34 +162,17 @@
                             href="#">VIEW ALL</a>
                     </div>
                     <div class="divide-y divide-gray-100 dark:divide-gray-800">
-                        <div
-                            class="p-6 flex items-center gap-6 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors group">
-                            <div class="w-2 h-2 rounded-full bg-accent"></div>
-                            <div class="flex-1">
-                                <h5 class="text-sm font-medium">Calibrate household sensors</h5>
-                                <p class="text-xs text-gray-400 mt-1">Maintenance • Due in 2h</p>
-                            </div>
-                            <button class="opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span class="material-symbols-outlined text-gray-400">more_vert</span>
-                            </button>
+                        <div *ngIf="recentTasks.length === 0" class="p-8 text-center text-gray-400 text-sm">
+                            No recent activity
                         </div>
-                        <div
+                        <div *ngFor="let task of recentTasks"
                             class="p-6 flex items-center gap-6 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors group">
-                            <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                            <div class="w-2 h-2 rounded-full"
+                                [ngClass]="task.status === 'done' ? 'bg-emerald-500' : 'bg-accent'"></div>
                             <div class="flex-1">
-                                <h5 class="text-sm font-medium">Review kitchen object library</h5>
-                                <p class="text-xs text-gray-400 mt-1">Skills • Tomorrow</p>
-                            </div>
-                            <button class="opacity-0 group-hover:opacity-100 transition-opacity">
-                                <span class="material-symbols-outlined text-gray-400">more_vert</span>
-                            </button>
-                        </div>
-                        <div
-                            class="p-6 flex items-center gap-6 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors group">
-                            <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
-                            <div class="flex-1">
-                                <h5 class="text-sm font-medium">Update firmware to v2.4.0</h5>
-                                <p class="text-xs text-gray-400 mt-1">System • Completed</p>
+                                <h5 class="text-sm font-medium">{{ task.title }}</h5>
+                                <p class="text-xs text-gray-400 mt-1">{{ task.status | uppercase }} • {{ task.dueDate ?
+                                    (task.dueDate | date:'MMM d') : 'No due date' }}</p>
                             </div>
                             <button class="opacity-0 group-hover:opacity-100 transition-opacity">
                                 <span class="material-symbols-outlined text-gray-400">more_vert</span>
@@ -209,49 +184,44 @@
 
             <div class="space-y-8">
                 <div class="bg-primary dark:bg-white p-8 rounded-xl text-white dark:text-primary">
-                    <h4 class="display-font text-lg font-medium mb-6">Device Status</h4>
+                    <h4 class="display-font text-lg font-medium mb-6">System Status</h4>
                     <div class="space-y-6">
                         <div class="flex justify-between items-center">
-                            <span class="text-sm opacity-60">Battery</span>
-                            <span class="text-sm font-semibold">88%</span>
+                            <span class="text-sm opacity-60">Battery Level</span>
+                            <span class="text-sm font-semibold">{{ batteryLevel }}%</span>
                         </div>
                         <div class="w-full h-1.5 bg-white/20 dark:bg-primary/10 rounded-full overflow-hidden">
-                            <div class="bg-white dark:bg-primary h-full w-[88%]"></div>
+                            <div class="bg-white dark:bg-primary h-full transition-all duration-500"
+                                [style.width.%]="batteryLevel"></div>
                         </div>
                         <div class="flex justify-between items-center pt-2">
-                            <span class="text-sm opacity-60">Current Skill</span>
+                            <span class="text-sm opacity-60">Power Source</span>
                             <span class="text-sm font-semibold flex items-center gap-2">
-                                <span class="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
-                                Cleaning Mode
+                                <span class="w-2 h-2 bg-accent rounded-full" [class.animate-pulse]="isCharging"></span>
+                                {{ isCharging ? 'Charging' : 'On Battery' }}
                             </span>
                         </div>
                     </div>
                     <button
                         class="w-full mt-8 py-3 bg-white/10 dark:bg-primary/5 hover:bg-white/20 dark:hover:bg-primary/10 border border-white/20 dark:border-primary/10 rounded-lg text-xs font-semibold tracking-widest uppercase transition-all">
-                        Force Manual Control
+                        Manage Account
                     </button>
                 </div>
                 <div class="bg-white dark:bg-white/5 p-8 rounded-xl border border-gray-100 dark:border-gray-800">
                     <h4 class="display-font text-lg font-medium mb-6">Upcoming</h4>
                     <div class="space-y-6">
-                        <div class="flex gap-4">
-                            <div class="text-center">
-                                <p class="text-[10px] font-bold text-gray-400 uppercase">Oct</p>
-                                <p class="text-lg font-light leading-none">26</p>
-                            </div>
-                            <div>
-                                <h6 class="text-sm font-medium">System Maintenance</h6>
-                                <p class="text-xs text-gray-400 mt-0.5">04:00 AM - 05:00 AM</p>
-                            </div>
+                        <div *ngIf="upcomingTasks.length === 0" class="text-center text-gray-400 text-sm">
+                            No upcoming tasks
                         </div>
-                        <div class="flex gap-4">
+                        <div *ngFor="let task of upcomingTasks" class="flex gap-4">
                             <div class="text-center">
-                                <p class="text-[10px] font-bold text-gray-400 uppercase">Oct</p>
-                                <p class="text-lg font-light leading-none">28</p>
+                                <p class="text-[10px] font-bold text-gray-400 uppercase">{{ task.dueDate | date:'MMM' }}
+                                </p>
+                                <p class="text-lg font-light leading-none">{{ task.dueDate | date:'d' }}</p>
                             </div>
                             <div>
-                                <h6 class="text-sm font-medium">New Skill Deployment</h6>
-                                <p class="text-xs text-gray-400 mt-0.5">Fold Laundry v1.0</p>
+                                <h6 class="text-sm font-medium">{{ task.title }}</h6>
+                                <p class="text-xs text-gray-400 mt-0.5">{{ task.dueDate | date:'shortTime' }}</p>
                             </div>
                         </div>
                     </div>

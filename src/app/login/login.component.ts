@@ -1,12 +1,14 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
+import { ModalComponent, ModalConfig } from '../shared/components/modal/modal.component';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, ModalComponent],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
@@ -14,8 +16,24 @@ export class LoginComponent implements OnInit {
   username = '';
   password = '';
   rememberMe = false;
+  isLoading = false;
+  errorMessage = '';
+
+  // Modal properties
+  isModalOpen = false;
+  modalConfig: ModalConfig = {
+    type: 'success',
+    title: '',
+    message: '',
+    showClose: true,
+    closeText: 'Close'
+  };
   
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     // Theme initialization if needed
@@ -37,9 +55,68 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    console.log('Login attempt:', { username: this.username, password: this.password, rememberMe: this.rememberMe });
-    // Navigate to tasks or home on success
-    this.router.navigate(['/']);
+    if (!this.username.trim() || !this.password.trim()) {
+      this.modalConfig = {
+        type: 'error',
+        title: 'Validation Failed',
+        message: 'Username and password are required.',
+        showClose: true,
+        closeText: 'Understood'
+      };
+      this.isModalOpen = true;
+      this.cdr.detectChanges();
+      return;
+    }
+
+    this.isLoading = true;
+    this.errorMessage = '';
+
+    const credentials = {
+      username: this.username,
+      password: this.password
+    };
+
+    this.authService.login(credentials).subscribe({
+      next: (response) => {
+        console.log('Login successful:', response);
+        this.isLoading = false;
+        
+        this.modalConfig = {
+          type: 'success',
+          title: 'Login Successful',
+          message: 'Welcome back! Redirecting to your dashboard...',
+          showClose: false
+        };
+        this.isModalOpen = true;
+        this.cdr.detectChanges();
+
+        setTimeout(() => {
+          this.isModalOpen = false;
+          this.router.navigate(['/dashboard']);
+        }, 1500);
+      },
+      error: (error) => {
+        console.error('Login failed:', error);
+        this.isLoading = false;
+        
+        const msg = error.error?.msg || error.error?.message || 'Invalid username or password.';
+        this.errorMessage = msg;
+
+        this.modalConfig = {
+          type: 'error',
+          title: 'Login Failed',
+          message: msg,
+          showClose: true,
+          closeText: 'Try Again'
+        };
+        this.isModalOpen = true;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  handleModalClose() {
+    this.isModalOpen = false;
   }
 }
 

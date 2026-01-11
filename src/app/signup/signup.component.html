@@ -29,6 +29,11 @@
           </p>
         </div>
         <form (submit)="$event.preventDefault(); signUp()" class="space-y-6">
+          <div *ngIf="errorMessage && !isModalOpen"
+            class="p-4 bg-rose-50 border border-rose-100 text-rose-600 text-sm rounded-xl text-center">
+            {{ errorMessage }}
+          </div>
+
           <div class="space-y-5">
             <div class="group">
               <label
@@ -36,7 +41,7 @@
                 for="name">Full Name</label>
               <input [(ngModel)]="name" name="name"
                 class="w-full bg-slate-50 dark:bg-zinc-800/50 border border-border-light dark:border-border-dark rounded-xl py-3.5 px-4 focus:border-primary dark:focus:border-white transition-all placeholder:text-muted-light/50 dark:placeholder:text-muted-dark/50"
-                id="name" placeholder="John Doe" type="text" required />
+                id="name" placeholder="John Doe" type="text" required [disabled]="isLoading" />
             </div>
             <div class="group">
               <label
@@ -44,7 +49,7 @@
                 for="username">Username</label>
               <input [(ngModel)]="username" name="username"
                 class="w-full bg-slate-50 dark:bg-zinc-800/50 border border-border-light dark:border-border-dark rounded-xl py-3.5 px-4 focus:border-primary dark:focus:border-white transition-all placeholder:text-muted-light/50 dark:placeholder:text-muted-dark/50"
-                id="username" placeholder="johndoe_md" type="text" required />
+                id="username" placeholder="johndoe_md" type="text" required [disabled]="isLoading" />
             </div>
             <div class="group">
               <label
@@ -52,7 +57,7 @@
                 for="email">Email Address</label>
               <input [(ngModel)]="email" name="email"
                 class="w-full bg-slate-50 dark:bg-zinc-800/50 border border-border-light dark:border-border-dark rounded-xl py-3.5 px-4 focus:border-primary dark:focus:border-white transition-all placeholder:text-muted-light/50 dark:placeholder:text-muted-dark/50"
-                id="email" placeholder="name@example.com" type="email" required />
+                id="email" placeholder="name@example.com" type="email" required [disabled]="isLoading" />
             </div>
             <div class="group">
               <label
@@ -60,14 +65,14 @@
                 for="password">Password</label>
               <input [(ngModel)]="password" name="password"
                 class="w-full bg-slate-50 dark:bg-zinc-800/50 border border-border-light dark:border-border-dark rounded-xl py-3.5 px-4 focus:border-primary dark:focus:border-white transition-all placeholder:text-muted-light/50 dark:placeholder:text-muted-dark/50"
-                id="password" placeholder="••••••••" type="password" required />
+                id="password" placeholder="••••••••" type="password" required [disabled]="isLoading" />
             </div>
           </div>
           <div class="pt-4 space-y-6">
-            <button
-              class="w-full bg-primary dark:bg-white text-white dark:text-black py-4 px-8 font-medium hover:opacity-90 transition-all active:scale-[0.98] font-display uppercase tracking-widest text-xs rounded-full"
+            <button [disabled]="isLoading"
+              class="w-full bg-primary dark:bg-white text-white dark:text-black py-4 px-8 font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all active:scale-[0.98] font-display uppercase tracking-widest text-xs rounded-full"
               type="submit">
-              Create Account
+              {{ isLoading ? 'Creating Account...' : 'Create Account' }}
             </button>
             <div class="text-center">
               <p class="text-xs text-muted-light dark:text-muted-dark">
@@ -78,6 +83,7 @@
             </div>
           </div>
         </form>
+
         <div class="pt-8 border-t border-border-light dark:border-border-dark">
           <p class="text-[10px] text-center text-muted-light dark:text-muted-dark leading-relaxed">
             By creating an account, you agree to our <a class="underline" href="#">Terms of Service</a> and <a
@@ -100,5 +106,9 @@
       </div>
     </div>
   </footer>
+
+  <!-- Notification Modal -->
+  <app-modal class="relative z-[9999]" [isOpen]="isModalOpen" [config]="modalConfig" (close)="handleModalClose()">
+  </app-modal>
 
 </div>

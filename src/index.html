@@ -31,23 +31,24 @@
       theme: {
         extend: {
           colors: {
-            primary: "#1a1a1a",
-            "background-light": "#f7f7f5",
-            "background-dark": "#0f0f0f",
-            accent: "#ff4d00",
-            "muted-light": "#666666",
-            "muted-dark": "#A1A1AA",
-            "border-light": "#E5E7EB",
-            "border-dark": "#27272A",
+            "primary-blue": "#135bec",
+            "primary": "#000000",
+            "background-light": "#f6f6f8",
+            "background-dark": "#101622",
+            accent: "#135bec",
+            "muted-light": "#6b7280",
+            "muted-dark": "#9ca3af",
+            "border-light": "#e2e8f0",
+            "border-dark": "#1f2937",
           },
           fontFamily: {
-            display: ["Outfit", "sans-serif"],
+            display: ["Inter", "sans-serif"],
             sans: ["Inter", "sans-serif"],
           },
           borderRadius: {
-            DEFAULT: "12px",
-            'xl': "24px",
-            "2xl": "1.5rem",
+            DEFAULT: "0.5rem",
+            'xl': "0.75rem",
+            "full": "9999px",
           },
         },
       },
@@ -55,8 +56,7 @@
   </script>
 </head>
 
-<body
-  class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300">
+<body class="bg-background-light dark:bg-background-dark font-sans min-h-screen">
   <app-root></app-root>
 </body>
 
