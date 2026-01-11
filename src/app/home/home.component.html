@@ -1,88 +1,214 @@
-<div class="modern-container">
-  <header class="header">
-    <div class="header-left">
-      <div class="logo-icon"></div>
-      <a routerLink="/" class="logo-text">MYDAILY</a>
+<nav
+  class="fixed top-0 w-full z-50 glass-nav bg-white/70 dark:bg-black/70 border-b border-slate-200/50 dark:border-slate-800/50">
+  <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+    <div class="flex items-center space-x-2">
+      <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+        <span class="text-white text-xs font-bold">M</span>
+      </div>
+      <span class="font-display text-xl font-semibold tracking-tight">MYDAILY</span>
     </div>
-
-    <div class="header-right">
-      <a routerLink="/login" class="login-link">Log In</a>
-      <div class="menu-icon">
-        <span></span>
-        <span></span>
-        <span></span>
-      </div>
+    <div class="hidden md:flex items-center space-x-10 text-sm font-medium">
+      <a class="hover:text-primary/70 transition-colors" href="#">Platform</a>
+      <a class="hover:text-primary/70 transition-colors" href="#">Skill Library</a>
+      <a class="hover:text-primary/70 transition-colors" href="#">Resources</a>
+      <a class="hover:text-primary/70 transition-colors" href="#">Company</a>
     </div>
-  </header>
-
-  <div class="content-wrapper">
-    <div class="hero-section">
-      <p class="subtitle">The helpful task management app</p>
-      <p class="subtitle-secondary">Beta launching 2026</p>
-      <h1 class="main-headline">Say hello to MYDAILY</h1>
-      <p class="description">Built for busy households, MYDAILY works 24/7 to make your life lighter. Hand off your repetitive to-do's, so you can focus on what really matters.</p>
+    <div class="flex items-center space-x-4">
+      <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+        (click)="toggleDarkMode()">
+        <span class="material-symbols-outlined text-[20px]">dark_mode</span>
+      </button>
+      <a class="bg-primary text-white px-5 py-2 rounded-full text-sm font-medium hover:opacity-90 transition-opacity"
+        routerLink="/login">Sign In</a>
     </div>
-
-    <div class="visual-section">
-      <div class="visual-container">
-        <!-- Replace src with your actual video URL -->
-        <video class="hero-video" autoplay muted loop playsinline>
-          <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
-          <!-- Add fallback image if video fails to load -->
-          <img src="https://images.unsplash.com/photo-1611224923853-80b023f02d71?w=1200&h=800&fit=crop" 
-               alt="MYDAILY Task Management App" 
-               class="hero-image">
-        </video>
-        
-        <!-- Alternative: Use image instead of video -->
-        <!-- 
-        <img src="your-image.jpg" 
-             alt="MYDAILY Task Management App" 
-             class="hero-image">
-        -->
-        
-        <div class="image-overlay"></div>
-      </div>
-      <div class="cta-overlay">
-        <div class="cta-pill">
-          <span class="cta-text">Be one of 50 Founding Families</span>
-          <a routerLink="/signup" class="cta-action">Reserve now •</a>
-        </div>
-      </div>
-    </div>
-
-    <!-- Footer Section -->
-    <footer class="footer">
-      <div class="footer-white">
-        <div class="footer-content">
-          <div class="footer-left">
-            <p class="copyright">© 2026 MYDAILY Inc</p>
-          </div>
-          <div class="footer-right">
-            <a href="#" class="footer-link">Terms of Service</a>
-            <a href="#" class="footer-link">Privacy and Cookies</a>
-          </div>
-        </div>
-      </div>
-      <div class="footer-yellow">
-        <p class="footer-message">The sun is out. The tasks can wait.</p>
-        <div class="info-boxes">
-          <div class="info-box">
-            <span>{{ currentDate }}</span>
-          </div>
-          <div class="info-box">
-            <span>Mountain View, CA</span>
-          </div>
-          <div class="info-box">
-            <span class="sun-icon">☀</span>
-            <span>57°F</span>
-          </div>
-        </div>
-        <div class="footer-logo">
-          <div class="large-logo-icon"></div>
-        </div>
-      </div>
-    </footer>
   </div>
-</div>
+</nav>
 
+<main
+  class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300">
+  <section class="pt-32 pb-20 px-6">
+    <div class="max-w-7xl mx-auto">
+      <div #reveal class="reveal-on-scroll text-center space-y-8">
+        <p class="text-sm font-medium tracking-[0.2em] uppercase opacity-60">The future of focus</p>
+        <h1 class="font-display text-6xl md:text-8xl font-light tracking-tight leading-tight">
+          Say hello to <br /> <span class="font-normal italic">MYDAILY</span>
+        </h1>
+        <div
+          class="relative mt-16 w-full aspect-video md:aspect-[21/9] rounded-xl md:rounded-[2rem] overflow-hidden bg-slate-200 dark:bg-slate-800">
+          <img alt="Cinematic office space with natural lighting" class="w-full h-full object-cover"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzqKeFfEC1_VTzjc-XnGIGviGAgDblzZOxFwapsWE_WvF6Zm8e0JntzrALvYIbzJnH8CgzTCi3E5CPsm25pbqcIIiCwUj-y3sNOv5JMcY_RsTD-_suYu8zEwrfQyiLommFksuA8kLOIP88iKmm4OzJIN8lIGudtvJeCsIZ0CyGflZSFh6bgFcoH8CFmn7Y-YluCFs6slikDJM84prINuJPGl88JH4dvBRABLFCzywqM0RtHWkFxU-15Z0poQdNiqwKY40umd9S-Brd" />
+          <div class="absolute inset-0 bg-black/10 flex items-center justify-center">
+            <button
+              class="w-20 h-20 bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center group hover:scale-110 transition-transform">
+              <span class="material-symbols-outlined text-white text-4xl group-hover:fill-current">play_arrow</span>
+            </button>
+          </div>
+        </div>
+        <div class="max-w-2xl mx-auto mt-12 text-lg md:text-xl font-light leading-relaxed opacity-80">
+          Built for busy minds, MYDAILY works 24/7 to make your life lighter. Hand off your repetitive to-do's, so you
+          can focus on what really matters.
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="py-40 px-6 bg-slate-50 dark:bg-slate-900/50">
+    <div class="max-w-4xl mx-auto">
+      <div #reveal class="reveal-on-scroll space-y-4">
+        <h2 class="font-display text-5xl md:text-7xl font-light text-left">Mundane</h2>
+        <h2 class="font-display text-5xl md:text-7xl font-light text-center">made</h2>
+        <h2 class="font-display text-5xl md:text-7xl font-light text-right">magic</h2>
+      </div>
+      <div #reveal class="reveal-on-scroll mt-24 text-center max-w-xl mx-auto">
+        <p class="text-lg font-light opacity-70 leading-relaxed">
+          Powered by state-of-the-art AI models and an ever-expanding Skill Library, MYDAILY doesn't just know how to do
+          a few tasks—it learns your rhythm faster than any system before it.
+        </p>
+      </div>
+    </div>
+  </section>
+  <section class="py-24 px-6">
+    <div class="max-w-7xl mx-auto space-y-24">
+      <div #reveal class="reveal-on-scroll group">
+        <div class="relative aspect-[16/7] rounded-[2rem] overflow-hidden">
+          <img alt="Workspace organization"
+            class="w-full h-full object-cover grayscale transition-all duration-700 group-hover:grayscale-0 group-hover:scale-105"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3MM6htvJK-N09w-ScTGE5dC8uHQ4CTNtbV3iEvtbc0smaM0KqdbjKUQqvmXT_oB5FYFPONSkFkm5CjknG54yTxiJMDEday3q7P54dLcroXjQfb9VxCS7cdcn93jKzJBzYVWKpiQ56M3yQJ4ty1b9LHszR2oNESS4sTO1vjv-LnQmTPrzjxMGoO0ZE0luXk2h8Vm6IeWDvlxFzQzG2LwFLZIDlOnOZ3w87LqyitZTkhbdOT9kM60g96AnMmBZU-ThPYZ1HeHirC2_O" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent flex flex-col justify-end p-12">
+            <h3 class="text-white font-display text-4xl md:text-5xl font-light mb-4">MYDAILY works across your tools
+            </h3>
+            <p class="text-white/80 max-w-md font-light">Seamlessly connects your calendar, email, and project apps to
+              create a single source of truth.</p>
+          </div>
+        </div>
+      </div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div #reveal class="reveal-on-scroll group">
+          <div class="relative aspect-square rounded-[2rem] overflow-hidden mb-8">
+            <img alt="Focused work" class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuCU6E399Qfx11uPoYYxDVdSpPWOb1WuSTvfW51vqlor_4-SV56_8gn9Zyb7eunbfMSxWy93KrxSlqXF8X3SWqHqnfbT9rbWMZPx7zJHLXaVMt0rLjZSHrK3JZZIgupy4cFwdR2pkpjBvVOoJhsdikpOwHPTTsYbhcJ0tLUgl0tBrq7us4zLw0URS7hztf5Lw1ynVej3auaM8uW8FfHnGcUY7i-sK_czRkPN3kti6F0lyb5WbTsKd8RwFwQiTcciTs2QeSfd6TDfN38Y" />
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="bg-white/90 dark:bg-black/90 px-6 py-3 rounded-full font-display text-lg">Always
+                learning</span>
+            </div>
+          </div>
+          <h4 class="text-2xl font-display font-light mb-4">Autonomous Prioritization</h4>
+          <p class="opacity-60 font-light leading-relaxed">In December 2024, MYDAILY learned to identify your
+            high-impact work. Today, it automates your meeting prep, manages follow-ups, and protects your deep work
+            hours.</p>
+        </div>
+        <div #reveal class="reveal-on-scroll group">
+          <div class="relative aspect-square rounded-[2rem] overflow-hidden mb-8">
+            <img alt="Detail oriented work" class="w-full h-full object-cover"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7V4w1cULBfKfT6d_zrVidft2ouZT4un_u3bJ9YgXKIkdZgKtvvVz6zJBQ1slAIymQoMz9GTLUXc2qQOUYPebOhTazQY8wDlI52N0unheDvtl4jtZYakRjF_qM0yb3kkblz01RyJbBMagwQYaTG-pVX63euUdwcKP5MD4kpVU0BBg-CQ4ThXpq5D9pz63Kjo4va3fQj921yRb2BCSFsogqy0ls_gRTj8i5629AT7Z-j13YMAasbkNUUQzIcqnb7T3ulBd-oYHX4k0N" />
+            <div class="absolute inset-0 flex items-center justify-center">
+              <span class="bg-white/90 dark:bg-black/90 px-6 py-3 rounded-full font-display text-lg">Designed for real
+                life</span>
+            </div>
+          </div>
+          <h4 class="text-2xl font-display font-light mb-4">Intelligent Context Aware</h4>
+          <p class="opacity-60 font-light leading-relaxed">It understands not just what you're doing, but why. Our
+            context-engine distill millions of patterns into helpful actions that feel natural, not robotic.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="py-32 px-6">
+    <div class="max-w-4xl mx-auto bg-slate-100 dark:bg-slate-900 rounded-[3rem] p-12 md:p-24 text-center">
+      <div #reveal class="reveal-on-scroll space-y-8">
+        <div class="w-16 h-16 bg-primary mx-auto rounded-2xl flex items-center justify-center rotate-12">
+          <span class="material-symbols-outlined text-white text-3xl">bolt</span>
+        </div>
+        <h2 class="font-display text-4xl md:text-5xl font-light">Productivity reimagined.</h2>
+        <p class="opacity-60 max-w-sm mx-auto font-light">Join the waitlist to experience the first truly intelligent
+          task management system.</p>
+        <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <a class="w-full sm:w-auto bg-primary text-white px-8 py-4 rounded-full font-medium hover:scale-105 transition-transform"
+            href="#">Get Early Access</a>
+          <a class="w-full sm:w-auto px-8 py-4 rounded-full border border-slate-300 dark:border-slate-700 font-medium hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors"
+            href="#">See the demo</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="py-24 px-6">
+    <div class="max-w-3xl mx-auto space-y-8">
+      <h3 class="text-sm font-medium tracking-widest uppercase opacity-40 mb-12">Frequently Asked Questions</h3>
+      <div #reveal class="reveal-on-scroll border-b border-slate-200 dark:border-slate-800 pb-6 group cursor-pointer">
+        <div class="flex items-center justify-between">
+          <span class="text-xl font-light">How does MYDAILY learn?</span>
+          <span class="material-symbols-outlined opacity-40 group-hover:rotate-45 transition-transform">add</span>
+        </div>
+      </div>
+      <div #reveal class="reveal-on-scroll border-b border-slate-200 dark:border-slate-800 pb-6 group cursor-pointer">
+        <div class="flex items-center justify-between">
+          <span class="text-xl font-light">Is my data secure?</span>
+          <span class="material-symbols-outlined opacity-40 group-hover:rotate-45 transition-transform">add</span>
+        </div>
+      </div>
+      <div #reveal class="reveal-on-scroll border-b border-slate-200 dark:border-slate-800 pb-6 group cursor-pointer">
+        <div class="flex items-center justify-between">
+          <span class="text-xl font-light">How much does it cost?</span>
+          <span class="material-symbols-outlined opacity-40 group-hover:rotate-45 transition-transform">add</span>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="bg-white dark:bg-black pt-24 pb-12 px-6 border-t border-slate-200 dark:border-slate-800">
+  <div class="max-w-7xl mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-12 mb-20">
+      <div class="col-span-2">
+        <div class="flex items-center space-x-2 mb-6">
+          <div class="w-8 h-8 bg-primary rounded-full flex items-center justify-center">
+            <span class="text-white text-xs font-bold">M</span>
+          </div>
+          <span class="font-display text-xl font-semibold tracking-tight">MYDAILY</span>
+        </div>
+        <p class="opacity-50 font-light max-w-xs leading-relaxed">
+          The world's first proactive task management system designed to return your time.
+        </p>
+      </div>
+      <div>
+        <h5 class="font-medium mb-6">Product</h5>
+        <ul class="space-y-4 text-sm opacity-60 font-light">
+          <li><a class="hover:opacity-100 transition-opacity" href="#">Skills</a></li>
+          <li><a class="hover:opacity-100 transition-opacity" href="#">Integration</a></li>
+          <li><a class="hover:opacity-100 transition-opacity" href="#">Roadmap</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="font-medium mb-6">Company</h5>
+        <ul class="space-y-4 text-sm opacity-60 font-light">
+          <li><a class="hover:opacity-100 transition-opacity" href="#">About</a></li>
+          <li><a class="hover:opacity-100 transition-opacity" href="#">Journal</a></li>
+          <li><a class="hover:opacity-100 transition-opacity" href="#">Careers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="font-medium mb-6">Support</h5>
+        <ul class="space-y-4 text-sm opacity-60 font-light">
+          <li><a class="hover:opacity-100 transition-opacity" href="#">Help Center</a></li>
+          <li><a class="hover:opacity-100 transition-opacity" href="#">Security</a></li>
+          <li><a class="hover:opacity-100 transition-opacity" href="#">Contact</a></li>
+        </ul>
+      </div>
+      <div>
+        <h5 class="font-medium mb-6">Social</h5>
+        <ul class="space-y-4 text-sm opacity-60 font-light">
+          <li><a class="hover:opacity-100 transition-opacity" href="#">Twitter</a></li>
+          <li><a class="hover:opacity-100 transition-opacity" href="#">Instagram</a></li>
+          <li><a class="hover:opacity-100 transition-opacity" href="#">LinkedIn</a></li>
+        </ul>
+      </div>
+    </div>
+    <div
+      class="pt-12 border-t border-slate-200 dark:border-slate-800 flex flex-col md:flex-row justify-between items-center space-y-6 md:space-y-0 text-xs opacity-40 uppercase tracking-widest">
+      <div>© 2024 MYDAILY Inc.</div>
+      <div class="flex space-x-8">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+  </div>
+</footer>

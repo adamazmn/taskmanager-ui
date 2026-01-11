@@ -1,0 +1,291 @@
+<div
+    class="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark text-primary dark:text-gray-100 transition-colors duration-300">
+
+    <!-- Sidebar -->
+    <aside
+        class="w-64 border-r border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-black/20 backdrop-blur-md z-50 hidden lg:flex flex-col h-full">
+        <div class="p-8 flex-1 flex flex-col h-full">
+            <div class="mb-12 flex items-center gap-3">
+                <div class="w-8 h-8 bg-primary dark:bg-white rounded-full flex items-center justify-center">
+                    <span class="text-white dark:text-primary text-xs font-bold">M</span>
+                </div>
+                <h1 class="display-font text-xl font-semibold tracking-tight uppercase">MYDAILY</h1>
+            </div>
+
+            <nav class="flex-1 space-y-6">
+                <div>
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-4 font-semibold">Overview</p>
+                    <ul class="space-y-1">
+                        <li>
+                            <a routerLink="/dashboard"
+                                class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 transition-colors">
+                                <span class="material-symbols-outlined text-xl">dashboard</span> Dashboard
+                            </a>
+                        </li>
+                        <li>
+                            <a routerLink="/tasks"
+                                class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-xl">assignment</span> Tasks
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-xl">insights</span> Analytics
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-4 font-semibold">System</p>
+                    <ul class="space-y-1">
+                        <li>
+                            <a href="#"
+                                class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-xl">person</span> Profile
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#"
+                                class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors">
+                                <span class="material-symbols-outlined text-xl">settings</span> Settings
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="pt-8 border-t border-gray-100 dark:border-gray-800 mt-auto">
+                <button (click)="toggleTheme()"
+                    class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors w-full text-left">
+                    <span class="material-symbols-outlined text-xl">dark_mode</span> Appearance
+                </button>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 h-full overflow-y-auto p-6 lg:p-12 relative">
+        <header class="flex justify-between items-center mb-16">
+            <div>
+                <h2 class="display-font text-3xl font-light tracking-tight">Today’s Overview</h2>
+                <p class="text-gray-400 text-sm mt-1">Monday, October 24</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <button
+                    class="w-10 h-10 flex items-center justify-center rounded-full border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-white/5 transition-colors">
+                    <span class="material-symbols-outlined">notifications</span>
+                </button>
+                <div
+                    class="h-10 w-10 bg-accent rounded-full flex items-center justify-center text-white overflow-hidden">
+                    <img alt="User avatar" class="w-full h-full object-cover"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuCCkJHZfDJApp3JqEes7b921E07rBscgOqEXFhseKw1VNN0wYF6jMb-048qjiy_EJaC92QLCLR9Wan0miMzxwkSQQU4t-Xy7Ax1bEyfvdCjlWmk0CvpYb4STj7FGps18fZUN5xQ45g3QRAdRloqAMnLyfp8PLkSSV9vWoiAgR0jvG4Lk6VFFhWVS7ausEWyZa2VVnJj_rMjum2_dZxQJ2nc8Mrjcn5xGlBqPKyLfhrbWDWSjKyovBXs44jmc-2uy-PV3xdJhsxwl-yZ" />
+                </div>
+            </div>
+        </header>
+
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+            <div
+                class="bg-white dark:bg-white/5 p-10 rounded-xl border border-gray-100 dark:border-gray-800 relative overflow-hidden group">
+                <div class="relative z-10">
+                    <p class="text-xs uppercase tracking-widest text-gray-400 mb-2 font-semibold">Pending Tasks</p>
+                    <h3 class="display-font text-7xl font-light">12</h3>
+                    <div class="mt-6 flex items-center gap-2 text-accent">
+                        <span class="material-symbols-outlined text-sm">trending_up</span>
+                        <span class="text-xs font-medium">+2 since yesterday</span>
+                    </div>
+                </div>
+                <div class="absolute -right-8 -bottom-8 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
+                    <span class="material-symbols-outlined text-[200px]">pending_actions</span>
+                </div>
+            </div>
+            <div
+                class="bg-white dark:bg-white/5 p-10 rounded-xl border border-gray-100 dark:border-gray-800 relative overflow-hidden group">
+                <div class="relative z-10">
+                    <p class="text-xs uppercase tracking-widest text-gray-400 mb-2 font-semibold">Completed Today</p>
+                    <h3 class="display-font text-7xl font-light">28</h3>
+                    <div class="mt-6 flex items-center gap-2 text-emerald-500">
+                        <span class="material-symbols-outlined text-sm">check_circle</span>
+                        <span class="text-xs font-medium">85% of daily goal reached</span>
+                    </div>
+                </div>
+                <div class="absolute -right-8 -bottom-8 opacity-[0.03] group-hover:opacity-[0.07] transition-opacity">
+                    <span class="material-symbols-outlined text-[200px]">task_alt</span>
+                </div>
+            </div>
+        </section>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-16">
+            <div class="lg:col-span-2 space-y-8">
+                <div class="bg-white dark:bg-white/5 p-8 rounded-xl border border-gray-100 dark:border-gray-800">
+                    <div class="flex justify-between items-end mb-10">
+                        <div>
+                            <h4 class="display-font text-lg font-medium">Activity Trends</h4>
+                            <p class="text-sm text-gray-400">Task completion over the last 7 days</p>
+                        </div>
+                        <div class="flex gap-2">
+                            <button
+                                class="px-3 py-1 text-xs border border-gray-200 dark:border-gray-800 rounded-full font-medium">Weekly</button>
+                            <button
+                                class="px-3 py-1 text-xs bg-primary text-white dark:bg-white dark:text-primary rounded-full font-medium">Monthly</button>
+                        </div>
+                    </div>
+                    <div class="h-64 flex items-end justify-between gap-2 px-2">
+                        <div
+                            class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-[40%] transition-all hover:bg-accent hover:h-[45%]">
+                        </div>
+                        <div
+                            class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-[65%] transition-all hover:bg-accent hover:h-[70%]">
+                        </div>
+                        <div
+                            class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-[30%] transition-all hover:bg-accent hover:h-[35%]">
+                        </div>
+                        <div
+                            class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-[85%] transition-all hover:bg-accent hover:h-[90%]">
+                        </div>
+                        <div
+                            class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-[55%] transition-all hover:bg-accent hover:h-[60%]">
+                        </div>
+                        <div
+                            class="w-full bg-gray-100 dark:bg-white/5 rounded-t-lg h-[95%] transition-all hover:bg-accent hover:h-[100%]">
+                        </div>
+                        <div class="w-full bg-primary dark:bg-white rounded-t-lg h-[75%] transition-all"></div>
+                    </div>
+                    <div class="flex justify-between mt-4 px-2">
+                        <span class="text-[10px] uppercase font-bold text-gray-400">Mon</span>
+                        <span class="text-[10px] uppercase font-bold text-gray-400">Tue</span>
+                        <span class="text-[10px] uppercase font-bold text-gray-400">Wed</span>
+                        <span class="text-[10px] uppercase font-bold text-gray-400">Thu</span>
+                        <span class="text-[10px] uppercase font-bold text-gray-400">Fri</span>
+                        <span class="text-[10px] uppercase font-bold text-gray-400">Sat</span>
+                        <span class="text-[10px] uppercase font-bold text-gray-400">Sun</span>
+                    </div>
+                </div>
+
+                <div
+                    class="bg-white dark:bg-white/5 rounded-xl border border-gray-100 dark:border-gray-800 overflow-hidden">
+                    <div class="p-8 border-b border-gray-100 dark:border-gray-800 flex justify-between items-center">
+                        <h4 class="display-font text-lg font-medium">Recent Tasks</h4>
+                        <a class="text-xs font-semibold text-gray-400 hover:text-primary transition-colors"
+                            href="#">VIEW ALL</a>
+                    </div>
+                    <div class="divide-y divide-gray-100 dark:divide-gray-800">
+                        <div
+                            class="p-6 flex items-center gap-6 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors group">
+                            <div class="w-2 h-2 rounded-full bg-accent"></div>
+                            <div class="flex-1">
+                                <h5 class="text-sm font-medium">Calibrate household sensors</h5>
+                                <p class="text-xs text-gray-400 mt-1">Maintenance • Due in 2h</p>
+                            </div>
+                            <button class="opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-gray-400">more_vert</span>
+                            </button>
+                        </div>
+                        <div
+                            class="p-6 flex items-center gap-6 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors group">
+                            <div class="w-2 h-2 rounded-full bg-blue-500"></div>
+                            <div class="flex-1">
+                                <h5 class="text-sm font-medium">Review kitchen object library</h5>
+                                <p class="text-xs text-gray-400 mt-1">Skills • Tomorrow</p>
+                            </div>
+                            <button class="opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-gray-400">more_vert</span>
+                            </button>
+                        </div>
+                        <div
+                            class="p-6 flex items-center gap-6 hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors group">
+                            <div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+                            <div class="flex-1">
+                                <h5 class="text-sm font-medium">Update firmware to v2.4.0</h5>
+                                <p class="text-xs text-gray-400 mt-1">System • Completed</p>
+                            </div>
+                            <button class="opacity-0 group-hover:opacity-100 transition-opacity">
+                                <span class="material-symbols-outlined text-gray-400">more_vert</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="space-y-8">
+                <div class="bg-primary dark:bg-white p-8 rounded-xl text-white dark:text-primary">
+                    <h4 class="display-font text-lg font-medium mb-6">Device Status</h4>
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm opacity-60">Battery</span>
+                            <span class="text-sm font-semibold">88%</span>
+                        </div>
+                        <div class="w-full h-1.5 bg-white/20 dark:bg-primary/10 rounded-full overflow-hidden">
+                            <div class="bg-white dark:bg-primary h-full w-[88%]"></div>
+                        </div>
+                        <div class="flex justify-between items-center pt-2">
+                            <span class="text-sm opacity-60">Current Skill</span>
+                            <span class="text-sm font-semibold flex items-center gap-2">
+                                <span class="w-2 h-2 bg-accent rounded-full animate-pulse"></span>
+                                Cleaning Mode
+                            </span>
+                        </div>
+                    </div>
+                    <button
+                        class="w-full mt-8 py-3 bg-white/10 dark:bg-primary/5 hover:bg-white/20 dark:hover:bg-primary/10 border border-white/20 dark:border-primary/10 rounded-lg text-xs font-semibold tracking-widest uppercase transition-all">
+                        Force Manual Control
+                    </button>
+                </div>
+                <div class="bg-white dark:bg-white/5 p-8 rounded-xl border border-gray-100 dark:border-gray-800">
+                    <h4 class="display-font text-lg font-medium mb-6">Upcoming</h4>
+                    <div class="space-y-6">
+                        <div class="flex gap-4">
+                            <div class="text-center">
+                                <p class="text-[10px] font-bold text-gray-400 uppercase">Oct</p>
+                                <p class="text-lg font-light leading-none">26</p>
+                            </div>
+                            <div>
+                                <h6 class="text-sm font-medium">System Maintenance</h6>
+                                <p class="text-xs text-gray-400 mt-0.5">04:00 AM - 05:00 AM</p>
+                            </div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="text-center">
+                                <p class="text-[10px] font-bold text-gray-400 uppercase">Oct</p>
+                                <p class="text-lg font-light leading-none">28</p>
+                            </div>
+                            <div>
+                                <h6 class="text-sm font-medium">New Skill Deployment</h6>
+                                <p class="text-xs text-gray-400 mt-0.5">Fold Laundry v1.0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="relative group cursor-pointer overflow-hidden rounded-xl aspect-square">
+                    <img alt="Robot in home"
+                        class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        src="https://lh3.googleusercontent.com/aida-public/AB6AXuDwfIdeuko4Kk7ptCkzvW3qS8E1N69wbb6OFl0NTrbnxnYGubR6YQrUzW_3kXtpYwrQv-Nud_W6RJcnq9HUeYJBG2dkkO9xjnktp6mgHB2djQrdhn0APIaM9V7YEPQp7Z1fm_YX7MP9K12FfBxu1ZLm4KRLhcKAXyh8a3p42UtbJSnEC9fJDr1PRAD_DArFyJrqgVgQXIxXTBnnuxQtmngsWbJO811DtOWcz045ICRPJ1UM0QuBX3Le0M9hxkrgd9drxK3nKwypAdo_" />
+                    <div
+                        class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-8 flex flex-col justify-end">
+                        <p class="text-white/60 text-[10px] uppercase tracking-widest font-bold mb-2">Philosophy</p>
+                        <h5 class="text-white text-xl display-font font-light">Mundane made magic.</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer
+            class="mt-20 pt-8 border-t border-gray-200 dark:border-gray-800 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p class="text-xs text-gray-400">© 2024 MYDAILY Robotics Inc. All rights reserved.</p>
+            <div class="flex gap-8">
+                <a class="text-xs font-semibold text-gray-400 hover:text-primary dark:hover:text-white transition-colors"
+                    href="#">SUPPORT</a>
+                <a class="text-xs font-semibold text-gray-400 hover:text-primary dark:hover:text-white transition-colors"
+                    href="#">DOCUMENTATION</a>
+                <a class="text-xs font-semibold text-gray-400 hover:text-primary dark:hover:text-white transition-colors"
+                    href="#">PRIVACY</a>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Mobile Menu Button -->
+    <button
+        class="fixed bottom-6 right-6 lg:hidden w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center z-[100]">
+        <span class="material-symbols-outlined">menu</span>
+    </button>
+</div>

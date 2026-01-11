@@ -1,102 +1,104 @@
-<div class="modern-container">
-  <header class="header">
-    <div class="header-left">
-      <div class="logo-icon"></div>
-      <a routerLink="/" class="logo-text">MYDAILY</a>
-    </div>
-    <div class="header-right">
-      <a routerLink="/login" class="login-link">Log In</a>
-      <div class="menu-icon">
-        <span></span>
-        <span></span>
-        <span></span>
+<div
+  class="bg-background-light dark:bg-background-dark text-primary dark:text-white transition-colors duration-300 min-h-screen flex flex-col">
+  <nav class="p-8 flex justify-between items-center w-full max-w-7xl mx-auto">
+    <div class="flex items-center gap-2">
+      <div class="w-8 h-8 bg-primary dark:bg-white rounded-full flex items-center justify-center">
+        <span class="text-white dark:text-black text-xs font-bold">M</span>
       </div>
+      <span class="font-display font-semibold tracking-tighter text-xl">MYDAILY</span>
     </div>
-  </header>
-
-  <div class="content-wrapper">
-    <div class="text-section">
-      <p class="subtitle">Join the task management revolution</p>
-      <p class="subtitle-secondary">Beta launching 2026</p>
-      <h1 class="main-headline">Say hello to MYDAILY</h1>
+    <div class="flex items-center gap-6">
+      <button class="p-2 hover:opacity-70 transition-opacity" (click)="toggleTheme()">
+        <span class="material-symbols-outlined text-[20px] dark:hidden">dark_mode</span>
+        <span class="material-symbols-outlined text-[20px] hidden dark:block">light_mode</span>
+      </button>
+      <a class="text-sm font-medium hover:opacity-60 transition-opacity" routerLink="/login">Login</a>
     </div>
-
-    <div class="form-section">
-      <div *ngIf="!activationLinkSent" class="signup-form-wrapper">
-        <form (submit)="$event.preventDefault(); signUp()" class="modern-form">
-          <div class="form-group">
-            <label class="form-label">Full Name</label>
-            <input class="form-input" type="text" [(ngModel)]="name" name="name" required>
+  </nav>
+  <main class="flex-grow flex items-center justify-center px-6 py-12">
+    <div
+      class="w-full max-w-[480px] border border-border-light dark:border-border-dark p-8 md:p-12 bg-white/50 dark:bg-zinc-900/30 backdrop-blur-sm form-container shadow-sm">
+      <div class="space-y-10">
+        <div class="text-center space-y-4">
+          <h1 class="font-display text-5xl font-light tracking-tight leading-tight">
+            Start your <br />
+            <span class="italic">intelligent</span> day.
+          </h1>
+          <p class="text-muted-light dark:text-muted-dark text-sm max-w-[300px] mx-auto">
+            Join the minimalist task management system designed for precision and focus.
+          </p>
+        </div>
+        <form (submit)="$event.preventDefault(); signUp()" class="space-y-6">
+          <div class="space-y-5">
+            <div class="group">
+              <label
+                class="block text-[10px] uppercase tracking-widest font-semibold text-muted-light dark:text-muted-dark mb-2"
+                for="name">Full Name</label>
+              <input [(ngModel)]="name" name="name"
+                class="w-full bg-slate-50 dark:bg-zinc-800/50 border border-border-light dark:border-border-dark rounded-xl py-3.5 px-4 focus:border-primary dark:focus:border-white transition-all placeholder:text-muted-light/50 dark:placeholder:text-muted-dark/50"
+                id="name" placeholder="John Doe" type="text" required />
+            </div>
+            <div class="group">
+              <label
+                class="block text-[10px] uppercase tracking-widest font-semibold text-muted-light dark:text-muted-dark mb-2"
+                for="username">Username</label>
+              <input [(ngModel)]="username" name="username"
+                class="w-full bg-slate-50 dark:bg-zinc-800/50 border border-border-light dark:border-border-dark rounded-xl py-3.5 px-4 focus:border-primary dark:focus:border-white transition-all placeholder:text-muted-light/50 dark:placeholder:text-muted-dark/50"
+                id="username" placeholder="johndoe_md" type="text" required />
+            </div>
+            <div class="group">
+              <label
+                class="block text-[10px] uppercase tracking-widest font-semibold text-muted-light dark:text-muted-dark mb-2"
+                for="email">Email Address</label>
+              <input [(ngModel)]="email" name="email"
+                class="w-full bg-slate-50 dark:bg-zinc-800/50 border border-border-light dark:border-border-dark rounded-xl py-3.5 px-4 focus:border-primary dark:focus:border-white transition-all placeholder:text-muted-light/50 dark:placeholder:text-muted-dark/50"
+                id="email" placeholder="name@example.com" type="email" required />
+            </div>
+            <div class="group">
+              <label
+                class="block text-[10px] uppercase tracking-widest font-semibold text-muted-light dark:text-muted-dark mb-2"
+                for="password">Password</label>
+              <input [(ngModel)]="password" name="password"
+                class="w-full bg-slate-50 dark:bg-zinc-800/50 border border-border-light dark:border-border-dark rounded-xl py-3.5 px-4 focus:border-primary dark:focus:border-white transition-all placeholder:text-muted-light/50 dark:placeholder:text-muted-dark/50"
+                id="password" placeholder="••••••••" type="password" required />
+            </div>
           </div>
-          <div class="form-group">
-            <label class="form-label">Username</label>
-            <input class="form-input" type="text" [(ngModel)]="username" name="username" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Email</label>
-            <input class="form-input" type="email" [(ngModel)]="email" name="email" required>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Password</label>
-            <input class="form-input" type="password" [(ngModel)]="password" name="password" required>
-          </div>
-          <button class="modern-button" type="submit">Create Account</button>
-          <div class="form-links">
-            <a routerLink="/login" class="form-link">Already have an account? Login</a>
+          <div class="pt-4 space-y-6">
+            <button
+              class="w-full bg-primary dark:bg-white text-white dark:text-black py-4 px-8 font-medium hover:opacity-90 transition-all active:scale-[0.98] font-display uppercase tracking-widest text-xs rounded-full"
+              type="submit">
+              Create Account
+            </button>
+            <div class="text-center">
+              <p class="text-xs text-muted-light dark:text-muted-dark">
+                Already have an account?
+                <a class="text-primary dark:text-white font-medium underline underline-offset-4 hover:opacity-70 ml-1"
+                  routerLink="/login">Log in here</a>
+              </p>
+            </div>
           </div>
         </form>
-      </div>
-
-      <div *ngIf="activationLinkSent" class="activation-message">
-        <div class="activation-box">
-          <h3 class="activation-title">✓ Activation Link Sent!</h3>
-          <p class="activation-text">
-            We've sent an activation link to:<br>
-            <strong>{{ email }}</strong>
+        <div class="pt-8 border-t border-border-light dark:border-border-dark">
+          <p class="text-[10px] text-center text-muted-light dark:text-muted-dark leading-relaxed">
+            By creating an account, you agree to our <a class="underline" href="#">Terms of Service</a> and <a
+              class="underline" href="#">Privacy Policy</a>. MYDAILY uses advanced encryption to protect your data.
           </p>
-          <p class="activation-text">
-            Please check your email and click the link to activate your account.
-          </p>
-          <button class="modern-button" (click)="activationLinkSent = false">Resend Link</button>
-          <div class="form-links">
-            <a routerLink="/login" class="form-link">Go to Login</a>
-          </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Footer Section -->
-  <footer class="footer">
-    <div class="footer-white">
-      <div class="footer-content">
-        <div class="footer-left">
-          <p class="copyright">© 2026 MYDAILY Inc</p>
-        </div>
-        <div class="footer-right">
-          <a href="#" class="footer-link">Terms of Service</a>
-          <a href="#" class="footer-link">Privacy and Cookies</a>
-        </div>
+  </main>
+  <footer class="p-8 mt-auto">
+    <div
+      class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-4 text-[11px] uppercase tracking-[0.2em] text-muted-light dark:text-muted-dark">
+      <div class="flex gap-8">
+        <a class="hover:text-primary dark:hover:text-white transition-colors" href="#">Twitter</a>
+        <a class="hover:text-primary dark:hover:text-white transition-colors" href="#">Instagram</a>
+        <a class="hover:text-primary dark:hover:text-white transition-colors" href="#">Journal</a>
       </div>
-    </div>
-    <div class="footer-yellow">
-      <p class="footer-message">The sun is out. The tasks can wait.</p>
-      <div class="info-boxes">
-        <div class="info-box">
-          <span>{{ currentDate }}</span>
-        </div>
-        <div class="info-box">
-          <span>Mountain View, CA</span>
-        </div>
-        <div class="info-box">
-          <span class="sun-icon">☀</span>
-          <span>57°F</span>
-        </div>
-      </div>
-      <div class="footer-logo">
-        <div class="large-logo-icon"></div>
+      <div>
+        © 2024 MYDAILY ROBOTICS & SOFTWARE
       </div>
     </div>
   </footer>
-</div>
 
+</div>

@@ -1,295 +1,362 @@
-<div class="modern-container">
-  <header class="header">
-    <div class="header-left">
-      <div class="logo-icon"></div>
-      <a routerLink="/" class="logo-text">MYDAILY</a>
-    </div>
-    <div class="header-right">
-      <a routerLink="/profile" class="login-link">Profile</a>
-      <a routerLink="/profile" class="username-link">{{ currentUser.username }}</a>
-      <a routerLink="/login" class="login-link">Log Out</a>
-      <div class="menu-icon">
-        <span></span>
-        <span></span>
-        <span></span>
+<div
+  class="bg-background-light dark:bg-background-dark text-zinc-900 dark:text-zinc-100 transition-colors duration-300 min-h-screen flex flex-col">
+  <header
+    class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-12">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 bg-black dark:bg-white rounded-full flex items-center justify-center">
+            <span class="text-white dark:text-black text-xs font-bold">M</span>
+          </div>
+          <span class="logo-text">MYDAILY</span>
+        </div>
+        <nav class="hidden md:flex items-center gap-8">
+          <a routerLink="/tasks"
+            class="text-sm font-semibold text-zinc-900 dark:text-white border-b-2 border-primary pb-1">Tasks</a>
+          <a href="#"
+            class="text-sm font-medium text-zinc-500 dark:text-zinc-400 hover:text-primary transition-colors">Journal</a>
+          <a href="#"
+            class="text-sm font-medium text-zinc-500 dark:text-zinc-400 hover:text-primary transition-colors">Insights</a>
+        </nav>
+      </div>
+      <div class="flex items-center gap-4">
+        <button class="p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors">
+          <span class="material-symbols-outlined text-zinc-600 dark:text-zinc-400">notifications</span>
+        </button>
+        <div
+          class="h-10 w-10 rounded-full border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-200 dark:bg-zinc-800">
+          <img
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj6U-m6CUKbTn1-MPqBeKdiypVzVnQnlGgPHQdPJN02tfVBxCT5QFOhBLIJ1qMdLI-NpGRRH_HIZG181vZwHHsF26pssRmjo6XUCRUWWxBvIXxYoA9JJSnbawodxRitLjBnhE5ABb-aQsPVsf9Y5GbsDVKEO-ML907mWbOAG2Ns5pJupNUE8mz7f-3WLUn-5_xZFb8kYWVJV2L70VQj9LWR667IEWN551I9dgAR93F7Hlbvsykk3TWyPar-10fD9WEg8V_JsoKY4mT"
+            alt="User Profile" class="w-full h-full object-cover">
+        </div>
       </div>
     </div>
   </header>
 
-  <div class="content-wrapper">
-    <div class="task-header">
-      <div class="task-header-left">
-        <h1 class="page-title">My Tasks</h1>
-        <p class="page-subtitle">Manage your daily tasks and stay organized</p>
+  <main class="max-w-7xl mx-auto px-6 py-12 flex-grow w-full">
+    <div class="mb-12">
+      <h1 class="font-display text-5xl font-light tracking-tight mb-4 text-primary dark:text-white">Focus on what
+        matters</h1>
+      <p class="text-zinc-500 dark:text-zinc-400 max-w-xl text-lg">Simplified management for your high-performance
+        workflow. Clear the noise, track the impact.</p>
+    </div>
+
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+      <div class="flex flex-wrap items-center gap-3">
+        <div class="relative group">
+          <div
+            class="flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-zinc-400 transition-all focus-within:border-primary">
+            <span class="material-symbols-outlined text-zinc-400 text-sm">calendar_month</span>
+            <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400 whitespace-nowrap">Added:</span>
+            <input type="date" [ngModel]="filterDateAdded" (ngModelChange)="onDateAddedChange($event)"
+              class="bg-transparent border-0 p-0 text-sm font-medium focus:ring-0 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 w-auto outline-none cursor-pointer"
+              placeholder="Date Added">
+          </div>
+        </div>
+        <div class="relative group">
+          <div
+            class="flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-zinc-400 transition-all focus-within:border-primary">
+            <span class="material-symbols-outlined text-zinc-400 text-sm">event_available</span>
+            <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400 whitespace-nowrap">Due:</span>
+            <input type="date" [ngModel]="filterDueDate" (ngModelChange)="onDueDateChange($event)"
+              class="bg-transparent border-0 p-0 text-sm font-medium focus:ring-0 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 w-auto outline-none cursor-pointer"
+              placeholder="Due Date">
+          </div>
+        </div>
+        <div class="relative group">
+          <div class="relative">
+            <select [ngModel]="filterStatus" (ngModelChange)="onFilterChange($event)"
+              class="pl-10 pr-8 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm font-medium hover:border-zinc-400 transition-all outline-none focus:border-primary appearance-none cursor-pointer">
+              <option value="all">All Status</option>
+              <option value="pending">Pending</option>
+              <option value="done">Done</option>
+            </select>
+            <span
+              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm pointer-events-none">flag</span>
+            <span
+              class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm pointer-events-none">expand_more</span>
+          </div>
+        </div>
+        <span class="h-6 w-[1px] bg-zinc-300 dark:bg-zinc-700 mx-2"></span>
+        <button (click)="clearFilters()"
+          class="text-sm font-medium text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">Clear
+          All</button>
       </div>
-      <button (click)="openModal()" class="create-button">
-        <span>+</span> Create Task
+      <button (click)="openModal()"
+        class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white dark:bg-white dark:text-black rounded-full font-medium hover:opacity-90 transition-opacity shadow-lg shadow-black/5">
+        <span class="material-symbols-outlined text-sm">add</span>
+        Create New Task
       </button>
     </div>
 
-    <div class="filter-section">
-      <div class="filter-group">
-        <label class="filter-label">Status:</label>
-        <div class="filter-buttons-row">
-          <button 
-            class="filter-btn" 
-            [class.active]="filterStatus === 'all'"
-            (click)="onFilterChange('all')">
-            All
-          </button>
-          <button 
-            class="filter-btn" 
-            [class.active]="filterStatus === 'pending'"
-            (click)="onFilterChange('pending')">
-            Pending
-          </button>
-          <button 
-            class="filter-btn" 
-            [class.active]="filterStatus === 'done'"
-            (click)="onFilterChange('done')">
-            Done
-          </button>
-        </div>
-      </div>
-      <div class="filter-group">
-        <label class="filter-label" for="dateAdded">Date Added:</label>
-        <input
-          id="dateAdded"
-          type="date"
-          class="filter-date-input"
-          [value]="filterDateAdded"
-          (change)="onDateAddedChange($any($event.target).value)">
-      </div>
-      <div class="filter-group">
-        <label class="filter-label" for="dueDate">Due Date:</label>
-        <input
-          id="dueDate"
-          type="date"
-          class="filter-date-input"
-          [value]="filterDueDate"
-          (change)="onDueDateChange($any($event.target).value)">
-      </div>
-      <button 
-        *ngIf="filterDateAdded || filterDueDate"
-        class="filter-clear-btn"
-        (click)="clearDateFilters()">
-        Clear Filters
-      </button>
-    </div>
-
-    <div class="tasks-container">
-      <div *ngIf="isLoading" class="loading-state">
-        <p>Loading tasks...</p>
+    <div class="space-y-4">
+      <div class="flex items-center gap-4 mb-6">
+        <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400">Active Tasks</h3>
+        <div class="flex-1 h-px bg-zinc-200 dark:bg-zinc-800"></div>
       </div>
 
-      <div *ngIf="!isLoading && filteredTasks.length === 0" class="empty-state">
-        <p class="empty-message">No tasks found</p>
-        <button (click)="openModal()" class="create-link">Create your first task</button>
+      <div *ngIf="isLoading" class="text-center py-10">
+        <p class="text-zinc-500">Loading tasks...</p>
       </div>
 
-      <div *ngIf="!isLoading && filteredTasks.length > 0" class="tasks-list">
-        <div *ngFor="let task of filteredTasks" class="task-card">
-          <div class="task-content">
-            <div class="task-checkbox" (click)="openStatusConfirmModal(task)">
-              <div class="checkbox" [class.checked]="task.status === 'done'">
-                <span *ngIf="task.status === 'done'">✓</span>
-              </div>
+      <div *ngIf="!isLoading && filteredActiveTasks.length === 0" class="text-center py-10">
+        <p class="text-zinc-500">No active tasks</p>
+      </div>
+
+      <div *ngFor="let task of filteredActiveTasks"
+        class="task-card group relative bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 p-6 rounded-xl transition-all hover:shadow-md hover:border-zinc-400 dark:hover:border-zinc-600">
+        <div class="flex items-start justify-between">
+          <div class="flex gap-4 w-full">
+            <div class="mt-1">
+              <input type="checkbox" [checked]="task.status === 'done'" (change)="openStatusConfirmModal(task)"
+                class="w-5 h-5 rounded-full border-zinc-300 dark:border-zinc-700 text-primary focus:ring-primary cursor-pointer transition-colors">
             </div>
-            <div class="task-details">
-              <h3 class="task-title" [class.completed]="task.status === 'done'">
-                {{ task.title }}
-              </h3>
-              <p class="task-description">{{ task.description }}</p>
-              <div class="task-meta">
-                <span class="task-status" [class.pending]="task.status === 'pending'" [class.done]="task.status === 'done'">
-                  {{ task.status === 'pending' ? 'Pending' : 'Done' }}
-                </span>
-                <span *ngIf="task.dueDate" class="task-date">
-                  Due: {{ task.dueDate | date: 'MMM d, y' }}
-                </span>
-                <span class="task-date">
-                  Added: {{ task.createdAt | date: 'MMM d, y' }}
-                </span>
-                <span *ngIf="task.attachments && task.attachments.length > 0" class="task-attachments">
-                  📎 {{ task.attachments.length }} file{{ task.attachments.length > 1 ? 's' : '' }}
-                </span>
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-1">
+                <h3 class="text-lg font-medium transition-colors">{{ task.title }}</h3>
+                <span class="status-tag-pending">PENDING</span>
+              </div>
+              <p class="text-zinc-500 dark:text-zinc-400 text-sm mb-4">{{ task.description }}</p>
+              <div class="flex flex-wrap items-center gap-x-6 gap-y-2">
+                <div class="flex items-center gap-1.5 text-xs text-zinc-400">
+                  <span class="material-symbols-outlined text-sm">calendar_add_on</span>
+                  Added: {{ task.createdAt | date:'MMM d, y' }}
+                </div>
+                <div *ngIf="task.dueDate" class="flex items-center gap-1.5 text-xs text-zinc-400">
+                  <span class="material-symbols-outlined text-sm">calendar_today</span>
+                  Due: {{ task.dueDate | date:'MMM d, y' }}
+                </div>
+                <div *ngIf="task.attachments?.length" class="flex items-center gap-1.5 text-xs text-zinc-400">
+                  <span class="material-symbols-outlined text-sm">attachment</span>
+                  {{ task.attachments?.length }} Files
+                </div>
               </div>
             </div>
           </div>
-          <div class="task-actions">
-            <a [routerLink]="['/tasks', task.id]" class="action-btn edit-btn">Edit</a>
-            <button class="action-btn delete-btn" (click)="deleteTask(task.id)">Delete</button>
+          <div class="flex items-center gap-2">
+            <button (click)="openEditModal(task)"
+              class="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg text-zinc-400 hover:text-primary dark:hover:text-white transition-all"
+              title="Edit Task">
+              <span class="material-symbols-outlined text-[20px]">edit</span>
+            </button>
+            <button (click)="deleteTask(task.id)"
+              class="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg text-zinc-400 hover:text-red-600 dark:hover:text-red-400 transition-all"
+              title="Delete Task">
+              <span class="material-symbols-outlined text-[20px]">delete</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4 mt-12 mb-6">
+        <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400">Accomplished</h3>
+        <div class="flex-1 h-px bg-zinc-200 dark:bg-zinc-800"></div>
+      </div>
+
+      <div *ngIf="!isLoading && filteredCompletedTasks.length === 0" class="text-center py-10">
+        <p class="text-zinc-500">No completed tasks</p>
+      </div>
+
+      <div *ngFor="let task of filteredCompletedTasks"
+        class="task-card group relative bg-zinc-50/50 dark:bg-zinc-900/30 border border-zinc-200 dark:border-zinc-800 p-6 rounded-xl transition-all">
+        <div class="flex items-start justify-between">
+          <div class="flex gap-4 w-full">
+            <div class="mt-1">
+              <input type="checkbox" checked (change)="openStatusConfirmModal(task)"
+                class="w-5 h-5 rounded-full border-zinc-200 dark:border-zinc-700 text-zinc-400 focus:ring-zinc-300 cursor-pointer">
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center gap-3 mb-1">
+                <h3 class="text-lg font-medium line-through text-zinc-400">{{ task.title }}</h3>
+                <span class="status-tag-done">DONE</span>
+              </div>
+              <p class="text-zinc-400 text-sm mb-4">{{ task.description }}</p>
+              <div class="flex items-center gap-1.5 text-xs text-zinc-300">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                Completed
+              </div>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button (click)="openEditModal(task)"
+              class="p-2 hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg text-zinc-300 hover:text-primary dark:hover:text-white transition-all"
+              title="Edit Task">
+              <span class="material-symbols-outlined text-[20px]">edit</span>
+            </button>
+            <button (click)="deleteTask(task.id)"
+              class="p-2 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg text-zinc-300 hover:text-red-600 dark:hover:text-red-400 transition-all"
+              title="Delete Task">
+              <span class="material-symbols-outlined text-[20px]">delete</span>
+            </button>
           </div>
         </div>
       </div>
     </div>
+  </main>
+
+  <footer class="max-w-7xl mx-auto px-6 pt-24 pb-12 border-t border-zinc-200 dark:border-zinc-800 mt-24 w-full">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
+      <div>
+        <h4 class="font-display font-medium mb-6">Explore</h4>
+        <ul class="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
+          <li><a href="#" class="hover:text-primary transition-colors">Technology</a></li>
+          <li><a href="#" class="hover:text-primary transition-colors">Journal</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-display font-medium mb-6">About</h4>
+        <ul class="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
+          <li><a href="#" class="hover:text-primary transition-colors">Company</a></li>
+          <li><a href="#" class="hover:text-primary transition-colors">Careers</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-display font-medium mb-6">Social</h4>
+        <ul class="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
+          <li><a href="#" class="hover:text-primary transition-colors">Instagram</a></li>
+          <li><a href="#" class="hover:text-primary transition-colors">YouTube</a></li>
+        </ul>
+      </div>
+      <div class="col-span-2 md:col-span-1">
+        <p class="text-xs text-zinc-400 uppercase tracking-widest mb-4">Stay updated</p>
+        <div class="flex gap-2">
+          <input type="email" placeholder="Email address"
+            class="flex-1 bg-transparent border-b border-zinc-300 dark:border-zinc-700 py-2 text-sm focus:border-primary outline-none transition-colors">
+          <button class="text-sm font-medium hover:text-primary transition-colors">Subscribe</button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="flex flex-col md:flex-row justify-between items-center gap-6 pt-12 border-t border-zinc-200 dark:border-zinc-800">
+      <span class="text-xs text-zinc-400">© 2024 MYDAILY Robotics Inc.</span>
+      <div class="flex gap-8 text-xs text-zinc-400 uppercase tracking-widest">
+        <a href="#" class="hover:text-primary transition-colors">Terms</a>
+        <a href="#" class="hover:text-primary transition-colors">Privacy</a>
+      </div>
+    </div>
+  </footer>
+
+  <div class="fixed bottom-12 right-12 hidden lg:block opacity-[0.03] pointer-events-none">
+    <div class="w-[400px] h-[400px] border-[40px] border-primary rounded-full"></div>
   </div>
 
-  <!-- Task Creation Modal -->
-  <div *ngIf="showModal" class="modal-overlay" (click)="closeModal()">
-    <div class="modal-content" (click)="$event.stopPropagation()">
-      <div class="modal-header">
-        <h2 class="modal-title">Create New Task</h2>
-        <button class="modal-close" (click)="closeModal()">×</button>
+  <!-- Task Creation Modal and other modals remain standard, but can be styled similarly if needed -->
+  <div *ngIf="showModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+    <div
+      class="bg-card-light dark:bg-card-dark w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden border border-slate-200/50 dark:border-slate-800/50 animate-in fade-in zoom-in duration-300 bg-white dark:bg-zinc-900">
+      <div class="px-8 pt-8 pb-4 flex justify-between items-start">
+        <div>
+          <h2 class="text-3xl font-display font-medium tracking-tight text-slate-900 dark:text-white">{{ isEditing ?
+            'Edit Task' : 'New Task' }}</h2>
+          <p class="text-slate-500 dark:text-slate-400 mt-1 text-sm">Assign a new mundane magic to your day.</p>
+        </div>
+        <button (click)="closeModal()"
+          class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors">
+          <span class="material-symbols-outlined text-slate-400">close</span>
+        </button>
       </div>
-      <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="task-form">
-        <div class="form-group">
-          <label class="form-label" for="title">Title *</label>
-          <input
-            id="title"
-            type="text"
-            formControlName="title"
-            class="form-input"
-            [class.error]="title?.invalid && title?.touched"
-            placeholder="Enter task title">
-          <div *ngIf="title?.invalid && title?.touched" class="error-message">
-            <span *ngIf="title?.errors?.['required']">Title is required</span>
-            <span *ngIf="title?.errors?.['minlength']">Title must be at least 3 characters</span>
+      <form [formGroup]="taskForm" (ngSubmit)="onSubmit()" class="px-8 py-4 space-y-6">
+        <div>
+          <label class="block text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2"
+            for="title">Task Title</label>
+          <input formControlName="title"
+            class="w-full bg-slate-50 dark:bg-zinc-900/50 border-0 focus:ring-2 focus:ring-primary rounded-lg py-3 px-4 text-lg font-medium placeholder:text-slate-300 dark:placeholder:text-slate-700 transition-all text-slate-900 dark:text-slate-100"
+            id="title" placeholder="e.g., Clean the kitchen counter" type="text"
+            [class.error]="title?.invalid && title?.touched" />
+        </div>
+        <div class="grid grid-cols-2 gap-6">
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2"
+              for="status">Priority Status</label>
+            <div class="relative">
+              <select formControlName="status"
+                class="w-full bg-slate-50 dark:bg-zinc-900/50 border-0 focus:ring-2 focus:ring-primary rounded-lg py-3 px-4 appearance-none text-slate-900 dark:text-slate-100"
+                id="status">
+                <option value="pending">Pending</option>
+                <option value="done">Done</option>
+              </select>
+              <span
+                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-sm">expand_more</span>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2"
+              for="dueDate">Due Date</label>
+            <div class="relative">
+              <input formControlName="dueDate"
+                class="w-full bg-slate-50 dark:bg-zinc-900/50 border-0 focus:ring-2 focus:ring-primary rounded-lg py-3 px-4 text-slate-900 dark:text-slate-100"
+                id="dueDate" type="date" />
+              <span
+                class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400 text-sm">calendar_today</span>
+            </div>
           </div>
         </div>
-
-        <div class="form-group">
-          <label class="form-label" for="description">Description *</label>
-          <textarea
-            id="description"
-            formControlName="description"
-            class="form-textarea"
-            [class.error]="description?.invalid && description?.touched"
-            rows="4"
-            placeholder="Enter task description"></textarea>
-          <div *ngIf="description?.invalid && description?.touched" class="error-message">
-            <span *ngIf="description?.errors?.['required']">Description is required</span>
-            <span *ngIf="description?.errors?.['minlength']">Description must be at least 10 characters</span>
+        <div>
+          <label
+            class="block text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2">Description</label>
+          <div
+            class="border border-slate-200 dark:border-slate-800 rounded-lg overflow-hidden bg-slate-50 dark:bg-zinc-900/50">
+            <div
+              class="flex items-center gap-1 p-2 border-b border-slate-200 dark:border-slate-800 bg-white dark:bg-zinc-900/80">
+              <button
+                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400"
+                type="button"><span class="material-symbols-outlined text-sm">format_bold</span></button>
+              <button
+                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400"
+                type="button"><span class="material-symbols-outlined text-sm">format_italic</span></button>
+              <button
+                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400"
+                type="button"><span class="material-symbols-outlined text-sm">format_list_bulleted</span></button>
+              <div class="w-px h-4 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+              <button
+                class="p-1.5 hover:bg-slate-100 dark:hover:bg-slate-800 rounded text-slate-600 dark:text-slate-400"
+                type="button"><span class="material-symbols-outlined text-sm">link</span></button>
+            </div>
+            <textarea formControlName="description"
+              class="w-full bg-transparent border-0 focus:ring-0 p-4 placeholder:text-slate-400 text-slate-700 dark:text-slate-300 resize-none"
+              placeholder="Describe the steps or specific requirements..." rows="4"></textarea>
           </div>
         </div>
-
-        <div class="form-group">
-          <label class="form-label" for="status">Status *</label>
-          <select
-            id="status"
-            formControlName="status"
-            class="form-select">
-            <option value="pending">Pending</option>
-            <option value="done">Done</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="dueDate">Due Date (Optional)</label>
-          <input
-            id="dueDate"
-            type="date"
-            formControlName="dueDate"
-            class="form-input">
-        </div>
-
-        <div class="form-group">
-          <label class="form-label" for="attachments">Attachments (Images/Files)</label>
-          <div class="file-upload-area">
-            <input
-              id="attachments"
-              type="file"
-              class="file-input"
-              multiple
-              accept="image/*,.pdf,.doc,.docx,.txt"
-              (change)="onFileSelected($event)">
-            <label for="attachments" class="file-upload-label">
-              <span class="upload-icon">📎</span>
-              <span class="upload-text">Click to upload or drag and drop</span>
-              <span class="upload-hint">Images, PDF, DOC, TXT (Max 10MB per file)</span>
-            </label>
-          </div>
-          <div *ngIf="filePreviews.length > 0" class="file-previews">
-            <div *ngFor="let preview of filePreviews; let i = index" class="file-preview-item">
-              <div *ngIf="preview.preview" class="image-preview">
-                <img [src]="preview.preview" [alt]="preview.file.name">
-                <button type="button" class="remove-file-btn" (click)="removeFile(i)">×</button>
-              </div>
-              <div *ngIf="!preview.preview" class="file-info">
-                <span class="file-icon">{{ getFileIcon(preview.file.type) }}</span>
-                <div class="file-details">
-                  <span class="file-name">{{ preview.file.name }}</span>
-                  <span class="file-size">{{ formatFileSize(preview.file.size) }}</span>
-                </div>
-                <button type="button" class="remove-file-btn" (click)="removeFile(i)">×</button>
+        <div>
+          <label
+            class="block text-xs font-semibold uppercase tracking-widest text-slate-400 dark:text-slate-500 mb-2">Attachments</label>
+          <div
+            class="border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-lg p-6 flex flex-col items-center justify-center hover:bg-slate-50 dark:hover:bg-zinc-900/30 transition-colors cursor-pointer group relative">
+            <input type="file" multiple (change)="onFileSelected($event)"
+              class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+            <span
+              class="material-symbols-outlined text-slate-400 group-hover:text-primary transition-colors mb-2">cloud_upload</span>
+            <p class="text-sm text-slate-500 dark:text-slate-400">Drag & drop or <span
+                class="text-primary font-medium">browse</span></p>
+            <p class="text-[10px] text-slate-400 dark:text-slate-500 mt-1">Images, PDF or Video up to 10MB</p>
+            <div *ngIf="selectedFiles.length > 0" class="mt-2 w-full">
+              <div *ngFor="let file of selectedFiles; let i = index"
+                class="flex items-center justify-between text-xs text-slate-500 bg-slate-100 dark:bg-slate-800 p-1 rounded mb-1">
+                <span class="truncate">{{ file.name }}</span>
+                <button type="button" (click)="removeFile(i); $event.stopPropagation()"
+                  class="text-red-500 hover:text-red-700 ml-2">×</button>
               </div>
             </div>
           </div>
         </div>
-
-        <div class="form-actions">
-          <button type="button" (click)="closeModal()" class="cancel-button">Cancel</button>
-          <button type="submit" class="submit-button" [disabled]="isLoading || taskForm.invalid">
-            {{ isLoading ? 'Saving...' : 'Create Task' }}
+        <div class="flex justify-end gap-4 mt-4 pt-4 border-t border-slate-100 dark:border-slate-800">
+          <button type="button" (click)="closeModal()"
+            class="px-6 py-2.5 text-sm font-medium text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors">
+            Cancel
+          </button>
+          <button type="submit" [disabled]="isLoading || taskForm.invalid"
+            class="bg-primary hover:opacity-90 text-white px-8 py-2.5 rounded-lg text-sm font-semibold transition-all shadow-lg shadow-primary/20 flex items-center gap-2">
+            {{ isLoading ? 'Saving...' : (isEditing ? 'Update Task' : 'Create Task') }}
           </button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Status Confirmation Modal -->
-  <app-modal
-    [isOpen]="showStatusConfirmModal"
-    [config]="statusConfirmModalConfig"
-    (close)="closeStatusConfirmModal()"
-    (yes)="onStatusConfirmYes()"
-    (no)="onStatusConfirmNo()">
-  </app-modal>
-
-  <!-- Delete Confirmation Modal -->
-  <app-modal
-    [isOpen]="showDeleteConfirmModal"
-    [config]="deleteConfirmModalConfig"
-    (close)="onDeleteConfirmNo()"
-    (yes)="onDeleteConfirmYes()"
-    (no)="onDeleteConfirmNo()">
-  </app-modal>
-
-  <!-- Success Modal -->
-  <app-modal
-    [isOpen]="showSuccessModal"
-    [config]="successModalConfig"
-    (close)="showSuccessModal = false">
-  </app-modal>
-
-  <!-- Error Modal -->
-  <app-modal
-    [isOpen]="showErrorModal"
-    [config]="errorModalConfig"
-    (close)="showErrorModal = false">
-  </app-modal>
-
-  <!-- Footer Section -->
-  <footer class="footer">
-    <div class="footer-white">
-      <div class="footer-content">
-        <div class="footer-left">
-          <p class="copyright">© 2026 MYDAILY Inc</p>
-        </div>
-        <div class="footer-right">
-          <a href="#" class="footer-link">Terms of Service</a>
-          <a href="#" class="footer-link">Privacy and Cookies</a>
-        </div>
-      </div>
-    </div>
-    <div class="footer-yellow">
-      <p class="footer-message">The sun is out. The tasks can wait.</p>
-      <div class="info-boxes">
-        <div class="info-box">
-          <span>{{ currentDate }}</span>
-        </div>
-        <div class="info-box">
-          <span>Mountain View, CA</span>
-        </div>
-        <div class="info-box">
-          <span class="sun-icon">☀</span>
-          <span>57°F</span>
-        </div>
-      </div>
-      <div class="footer-logo">
-        <div class="large-logo-icon"></div>
-      </div>
-    </div>
-  </footer>
+  <app-modal [isOpen]="showStatusConfirmModal" [config]="statusConfirmModalConfig" (close)="closeStatusConfirmModal()"
+    (yes)="onStatusConfirmYes()" (no)="onStatusConfirmNo()"></app-modal>
+  <app-modal [isOpen]="showDeleteConfirmModal" [config]="deleteConfirmModalConfig" (close)="onDeleteConfirmNo()"
+    (yes)="onDeleteConfirmYes()" (no)="onDeleteConfirmNo()"></app-modal>
+  <app-modal [isOpen]="showSuccessModal" [config]="successModalConfig" (close)="showSuccessModal = false"></app-modal>
+  <app-modal [isOpen]="showErrorModal" [config]="errorModalConfig" (close)="showErrorModal = false"></app-modal>
 </div>
-

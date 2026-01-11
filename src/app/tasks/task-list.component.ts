@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TaskService } from '../services/task.service';
 import { Task } from '../models/task.model';
 import { ModalComponent, ModalConfig } from '../shared/components/modal/modal.component';
@@ -9,7 +9,7 @@ import { ModalComponent, ModalConfig } from '../shared/components/modal/modal.co
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, ModalComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, ModalComponent],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss']
 })
@@ -21,6 +21,8 @@ export class TaskListComponent implements OnInit {
   filterDueDate: string = '';
   isLoading = false;
   showModal = false;
+  isEditing = false;
+  editingTaskId: string | null = null;
   showStatusConfirmModal = false;
   showDeleteConfirmModal = false;
   selectedTaskForStatusChange: Task | null = null;
@@ -97,11 +99,34 @@ export class TaskListComponent implements OnInit {
 
   openModal(): void {
     this.showModal = true;
+    this.isEditing = false;
+    this.editingTaskId = null;
     this.resetForm();
+  }
+
+  openEditModal(task: Task): void {
+    this.showModal = true;
+    this.isEditing = true;
+    this.editingTaskId = task.id;
+    
+    // Populate form with task details
+    this.taskForm.patchValue({
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      dueDate: task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : null
+    });
+
+    // Handle attachments if they exist (simplification for now, usually requires more complex logic to show existing files)
+    // For now we just reset file selection as re-uploading would be the edit action
+    this.selectedFiles = [];
+    this.filePreviews = [];
   }
 
   closeModal(): void {
     this.showModal = false;
+    this.isEditing = false;
+    this.editingTaskId = null;
     this.resetForm();
   }
 
@@ -176,7 +201,8 @@ export class TaskListComponent implements OnInit {
     this.applyFilter();
   }
 
-  clearDateFilters(): void {
+  clearFilters(): void {
+    this.filterStatus = 'all';
     this.filterDateAdded = '';
     this.filterDueDate = '';
     this.applyFilter();
@@ -299,34 +325,67 @@ export class TaskListComponent implements OnInit {
         attachments: attachments.length > 0 ? attachments : undefined
       };
 
-      this.taskService.createTask(taskData).subscribe({
-        next: (newTask) => {
-          this.tasks.push(newTask);
-          this.applyFilter();
-          this.closeModal();
-          this.isLoading = false;
-          this.showSuccessModal = true;
-          this.successModalConfig = {
-            type: 'success',
-            message: 'Task created successfully!',
-            showClose: true
-          };
-        },
-        error: (error) => {
-          console.error('Error creating task:', error);
-          this.isLoading = false;
-          this.showErrorModal = true;
-          this.errorModalConfig = {
-            type: 'error',
-            message: 'Failed to create task. Please try again.',
-            showClose: true
-          };
-        }
-      });
+      if (this.isEditing && this.editingTaskId) {
+        // Update existing task
+        this.taskService.updateTask(this.editingTaskId, taskData).subscribe({
+          next: (updatedTask) => {
+            const index = this.tasks.findIndex(t => t.id === updatedTask.id);
+            if (index !== -1) {
+              this.tasks[index] = updatedTask;
+              this.applyFilter();
+            }
+            this.closeModal();
+            this.isLoading = false;
+            this.showSuccessModal = true;
+            this.successModalConfig = {
+              type: 'success',
+              message: 'Task updated successfully!',
+              showClose: true
+            };
+          },
+          error: (error) => {
+            console.error('Error updating task:', error);
+            this.isLoading = false;
+            this.showErrorModal = true;
+            this.errorModalConfig = {
+              type: 'error',
+              message: 'Failed to update task. Please try again.',
+              showClose: true
+            };
+          }
+        });
+      } else {
+        // Create new task
+        this.taskService.createTask(taskData).subscribe({
+          next: (newTask) => {
+            this.tasks.push(newTask);
+            this.applyFilter();
+            this.closeModal();
+            this.isLoading = false;
+            this.showSuccessModal = true;
+            this.successModalConfig = {
+              type: 'success',
+              message: 'Task created successfully!',
+              showClose: true
+            };
+          },
+          error: (error) => {
+            console.error('Error creating task:', error);
+            this.isLoading = false;
+            this.showErrorModal = true;
+            this.errorModalConfig = {
+              type: 'error',
+              message: 'Failed to create task. Please try again.',
+              showClose: true
+            };
+          }
+        });
+      }
     } else {
       this.markFormGroupTouched();
     }
   }
+
 
   markFormGroupTouched(): void {
     Object.keys(this.taskForm.controls).forEach(key => {
@@ -382,6 +441,14 @@ export class TaskListComponent implements OnInit {
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  }
+
+  get filteredActiveTasks(): Task[] {
+    return this.filteredTasks.filter(task => task.status === 'pending');
+  }
+
+  get filteredCompletedTasks(): Task[] {
+    return this.filteredTasks.filter(task => task.status === 'done');
   }
 
   get title() {

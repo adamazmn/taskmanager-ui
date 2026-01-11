@@ -1,14 +1,63 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
+
 <head>
   <meta charset="utf-8">
   <title>TaskmanagerUi</title>
   <base href="/">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Favicon -->
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600&display=swap"
+    rel="stylesheet">
+
+  <!-- Material Symbols -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet">
+
+  <!-- Tailwind CDN (development only) -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,typography"></script>
+
+  <!-- Tailwind config -->
+  <script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            primary: "#1a1a1a",
+            "background-light": "#f7f7f5",
+            "background-dark": "#0f0f0f",
+            accent: "#ff4d00",
+            "muted-light": "#666666",
+            "muted-dark": "#A1A1AA",
+            "border-light": "#E5E7EB",
+            "border-dark": "#27272A",
+          },
+          fontFamily: {
+            display: ["Outfit", "sans-serif"],
+            sans: ["Inter", "sans-serif"],
+          },
+          borderRadius: {
+            DEFAULT: "12px",
+            'xl': "24px",
+            "2xl": "1.5rem",
+          },
+        },
+      },
+    };
+  </script>
 </head>
-<body>
+
+<body
+  class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-sans transition-colors duration-300">
   <app-root></app-root>
 </body>
+
 </html>

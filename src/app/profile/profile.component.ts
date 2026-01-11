@@ -38,5 +38,9 @@ export class ProfileComponent implements OnInit {
     };
     this.currentDate = now.toLocaleDateString('en-US', options);
   }
+
+  toggleTheme() {
+    document.documentElement.classList.toggle('dark');
+  }
 }
 

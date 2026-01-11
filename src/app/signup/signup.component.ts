@@ -32,6 +32,17 @@ export class SignupComponent implements OnInit {
     this.currentDate = now.toLocaleDateString('en-US', options);
   }
 
+  toggleTheme() {
+    const htmlElement = document.documentElement;
+    if (htmlElement.classList.contains('dark')) {
+      htmlElement.classList.remove('dark');
+      localStorage.setItem('theme', 'light');
+    } else {
+      htmlElement.classList.add('dark');
+      localStorage.setItem('theme', 'dark');
+    }
+  }
+
   signUp() {
     // Dummy method - in real app, this would call an API
     console.log('Sign up:', { name: this.name, username: this.username, email: this.email });

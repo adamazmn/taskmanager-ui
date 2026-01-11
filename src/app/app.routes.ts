@@ -6,6 +6,7 @@ import { SignupComponent } from './signup/signup.component';
 import { TaskListComponent } from './tasks/task-list.component';
 import { TaskFormComponent } from './tasks/task-form.component';
 import { ProfileComponent } from './profile/profile.component';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent },
@@ -15,4 +16,5 @@ export const routes: Routes = [
   { path: 'tasks/new', component: TaskFormComponent },
   { path: 'tasks/:id', component: TaskFormComponent },
   { path: 'profile', component: ProfileComponent },
+  { path: 'dashboard', component: DashboardComponent },
 ];
