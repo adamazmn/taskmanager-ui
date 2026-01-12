@@ -56,6 +56,11 @@ export class TaskService {
     return this.http.put(`${this.apiUrl}/updateTask`, dto);
   }
 
+  // Update user profile
+  updateUser(dto: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/updateUser`, dto);
+  }
+
   // Delete task
   deleteTask(taskId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/deleteTask`, {

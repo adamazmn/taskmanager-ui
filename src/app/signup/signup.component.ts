@@ -23,6 +23,10 @@ export class SignupComponent implements OnInit {
   errorMessage = '';
   isLoading = false;
 
+  // Mouse tracking for space background effect
+  mouseX = 0;
+  mouseY = 0;
+
   // Modal properties
   isModalOpen = false;
   modalConfig: ModalConfig = {
@@ -63,6 +67,12 @@ export class SignupComponent implements OnInit {
       htmlElement.classList.add('dark');
       localStorage.setItem('theme', 'dark');
     }
+  }
+
+  onMouseMove(event: MouseEvent, container: HTMLElement): void {
+    const rect = container.getBoundingClientRect();
+    this.mouseX = event.clientX - rect.left;
+    this.mouseY = event.clientY - rect.top;
   }
 
   signUp() {
