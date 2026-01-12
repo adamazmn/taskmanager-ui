@@ -4,13 +4,14 @@ import { RouterModule, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TaskService } from '../services/task.service';
 import { AuthService } from '../services/auth.service';
-import { Task } from '../models/task.model';
+import { Task, TaskAttachment } from '../models/task.model';
 import { ModalComponent, ModalConfig } from '../shared/components/modal/modal.component';
+import { SafePipe } from '../shared/pipes/safe.pipe';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, ModalComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, ModalComponent, SafePipe],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss']
 })
@@ -20,6 +21,7 @@ export class TaskListComponent implements OnInit {
   filterStatus: 'all' | 'pending' | 'done' = 'all';
   filterDateAdded: string = '';
   filterDueDate: string = '';
+  searchQuery: string = '';
   isLoadingTasks = false;
   isSubmitting = false;
   showModal = false;
@@ -29,6 +31,9 @@ export class TaskListComponent implements OnInit {
   showDeleteConfirmModal = false;
   selectedTaskForStatusChange: Task | null = null;
   taskToDelete: string | null = null;
+  showAttachmentModal = false;
+  selectedAttachment: TaskAttachment | null = null;
+  selectedTaskForAttachments: Task | null = null;
 
   statusConfirmModalConfig: ModalConfig = {
     type: 'warning',
@@ -67,6 +72,7 @@ export class TaskListComponent implements OnInit {
   taskForm!: FormGroup;
   selectedFiles: File[] = [];
   filePreviews: { file: File; preview: string }[] = [];
+  private readonly apiBaseUrl = 'http://localhost:8080';
   currentDate: string = '';
   currentUser = {
     username: 'johndoe',
@@ -90,6 +96,10 @@ export class TaskListComponent implements OnInit {
   logout(): void {
     this.authService.logout();
     this.router.navigate(['/login']);
+  }
+
+  toggleTheme(): void {
+    document.documentElement.classList.toggle('dark');
   }
 
   ngOnInit(): void {
@@ -208,6 +218,15 @@ export class TaskListComponent implements OnInit {
   applyFilter(): void {
     let filtered = [...this.tasks];
 
+    // Search filter
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(task => 
+        task.title.toLowerCase().includes(query) || 
+        task.description.toLowerCase().includes(query)
+      );
+    }
+
     if (this.filterStatus !== 'all') {
       filtered = filtered.filter(task => task.status === this.filterStatus);
     }
@@ -251,6 +270,12 @@ export class TaskListComponent implements OnInit {
     this.filterStatus = 'all';
     this.filterDateAdded = '';
     this.filterDueDate = '';
+    this.searchQuery = '';
+    this.applyFilter();
+  }
+
+  onSearchChange(query: string): void {
+    this.searchQuery = query;
     this.applyFilter();
   }
 
@@ -349,7 +374,14 @@ export class TaskListComponent implements OnInit {
 
           const index = this.tasks.findIndex(t => t.id === task.id);
           if (index !== -1) {
-            this.tasks[index] = { ...this.tasks[index], ...updatedTaskData };
+            // Preserve existing attachments since update doesn't change them
+            // and backend returns attachments as string
+            const existingAttachments = this.tasks[index].attachments;
+            this.tasks[index] = { 
+              ...this.tasks[index], 
+              ...updatedTaskData,
+              attachments: existingAttachments 
+            };
             this.applyFilter();
           }
           this.closeStatusConfirmModal();
@@ -418,7 +450,14 @@ export class TaskListComponent implements OnInit {
 
             const index = this.tasks.findIndex(t => t.id === updatedTask.id);
             if (index !== -1) {
-              this.tasks[index] = { ...this.tasks[index], ...updatedTask };
+              // Preserve existing attachments since update doesn't change them
+              // and backend returns attachments as string
+              const existingAttachments = this.tasks[index].attachments;
+              this.tasks[index] = { 
+                ...this.tasks[index], 
+                ...updatedTask,
+                attachments: existingAttachments 
+              };
               this.applyFilter();
             }
             this.closeModal();
@@ -552,6 +591,65 @@ export class TaskListComponent implements OnInit {
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  }
+
+  // Attachment viewing methods
+  getAttachmentUrl(attachment: TaskAttachment): string {
+    return `${this.apiBaseUrl}/files/${attachment.storedName}`;
+  }
+
+  openAttachmentPreview(task: Task): void {
+    this.selectedTaskForAttachments = task;
+    if (task.attachments && task.attachments.length > 0) {
+      this.selectedAttachment = task.attachments[0];
+    }
+    this.showAttachmentModal = true;
+  }
+
+  closeAttachmentPreview(): void {
+    this.showAttachmentModal = false;
+    this.selectedAttachment = null;
+    this.selectedTaskForAttachments = null;
+  }
+
+  selectAttachment(attachment: TaskAttachment): void {
+    this.selectedAttachment = attachment;
+  }
+
+  downloadAttachment(attachment: TaskAttachment): void {
+    const url = this.getAttachmentUrl(attachment);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = attachment.originalName;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  isImageFile(attachment: TaskAttachment): boolean {
+    return attachment.contentType?.startsWith('image/') || false;
+  }
+
+  isPdfFile(attachment: TaskAttachment): boolean {
+    return attachment.contentType === 'application/pdf';
+  }
+
+  getAttachmentIcon(attachment: TaskAttachment): string {
+    if (!attachment.contentType) return 'attachment';
+    if (attachment.contentType.startsWith('image/')) {
+      return 'image';
+    } else if (attachment.contentType.includes('pdf')) {
+      return 'picture_as_pdf';
+    } else if (attachment.contentType.includes('word') || attachment.contentType.includes('document')) {
+      return 'description';
+    } else if (attachment.contentType.includes('excel') || attachment.contentType.includes('spreadsheet')) {
+      return 'table_chart';
+    } else if (attachment.contentType.startsWith('video/')) {
+      return 'videocam';
+    } else {
+      return 'attachment';
+    }
   }
 
   get filteredActiveTasks(): Task[] {

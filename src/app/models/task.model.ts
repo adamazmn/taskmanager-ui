@@ -10,11 +10,10 @@ export interface Task {
 }
 
 export interface TaskAttachment {
-  id: string;
-  fileName: string;
-  fileUrl: string;
-  fileType: string;
-  fileSize: number;
-  uploadedAt: string;
+  originalName: string;
+  storedName: string;
+  contentType: string;
+  size: number;
+  path: string;
 }
 

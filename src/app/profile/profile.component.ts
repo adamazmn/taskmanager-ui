@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-profile',
@@ -22,7 +23,10 @@ export class ProfileComponent implements OnInit {
     name: 'John Doe'
   };
 
-  constructor() {}
+  constructor(
+    private router: Router,
+    private authService: AuthService
+  ) {}
 
   ngOnInit(): void {
     // In a real app, load user data from service
@@ -41,6 +45,11 @@ export class ProfileComponent implements OnInit {
 
   toggleTheme() {
     document.documentElement.classList.toggle('dark');
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
 
