@@ -1,28 +1,64 @@
-import { Component, OnInit } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  OnInit,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [RouterModule],
+  imports: [RouterModule, CommonModule],
   templateUrl: './home.component.html',
-  styleUrls: ['./home.component.scss']
+  styleUrls: ['./home.component.scss'],
 })
-export class HomeComponent implements OnInit {
-  currentDate: string = '';
+export class HomeComponent implements OnInit, AfterViewInit {
+  @ViewChildren('reveal', { read: ElementRef })
+  revealElements!: QueryList<ElementRef<HTMLElement>>;
 
-  ngOnInit() {
-    this.updateDate();
+  isLoggedIn = false;
+  openFaq: number | null = null;
+
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {}
+
+  ngOnInit(): void {
+    this.isLoggedIn = this.authService.isLoggedIn();
+    if (this.isLoggedIn) {
+      this.router.navigate(['/dashboard']);
+    }
   }
 
-  updateDate() {
-    const now = new Date();
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      month: 'short', 
-      day: 'numeric' 
-    };
-    this.currentDate = now.toLocaleDateString('en-US', options);
+  toggleDarkMode(): void {
+    document.documentElement.classList.toggle('dark');
+  }
+
+  toggleFaq(index: number): void {
+    this.openFaq = this.openFaq === index ? null : index;
+  }
+
+  ngAfterViewInit(): void {
+    const observer = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            obs.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    this.revealElements.forEach((el) =>
+      observer.observe(el.nativeElement)
+    );
   }
 }
-

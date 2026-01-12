@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router, ActivatedRoute, RouterModule } from '@angular/router';
 import { TaskService } from '../services/task.service';
+import { AuthService } from '../services/auth.service';
 import { Task } from '../models/task.model';
 
 @Component({
@@ -23,8 +24,10 @@ export class TaskFormComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     private taskService: TaskService,
+    private authService: AuthService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) {
     this.initForm();
   }
@@ -53,18 +56,22 @@ export class TaskFormComponent implements OnInit {
     
     this.isLoading = true;
     this.taskService.getTaskById(this.taskId).subscribe({
-      next: (task) => {
-        this.taskForm.patchValue({
-          title: task.title,
-          description: task.description,
-          status: task.status,
-          dueDate: task.dueDate ? task.dueDate : null
-        });
+      next: (task: Task) => {
+        if (task) {
+          this.taskForm.patchValue({
+            title: task.title,
+            description: task.description,
+            status: task.status,
+            dueDate: task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : null
+          });
+        }
         this.isLoading = false;
+        this.cdr.detectChanges();
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading task:', error);
         this.isLoading = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -94,19 +101,23 @@ export class TaskFormComponent implements OnInit {
           next: () => {
             this.router.navigate(['/tasks']);
           },
-          error: (error) => {
+          error: (error: any) => {
             console.error('Error updating task:', error);
             this.isLoading = false;
+            this.cdr.detectChanges();
           }
         });
       } else {
-        this.taskService.createTask(taskData).subscribe({
+        const username = this.authService.getUsername() || '';
+        const createData = { ...taskData, username };
+        this.taskService.createTask(createData, this.selectedFiles[0]).subscribe({
           next: () => {
             this.router.navigate(['/tasks']);
           },
-          error: (error) => {
+          error: (error: any) => {
             console.error('Error creating task:', error);
             this.isLoading = false;
+            this.cdr.detectChanges();
           }
         });
       }
@@ -150,6 +161,7 @@ export class TaskFormComponent implements OnInit {
               file: file,
               preview: e.target.result
             });
+            this.cdr.detectChanges();
           };
           reader.readAsDataURL(file);
         } else {
@@ -157,6 +169,7 @@ export class TaskFormComponent implements OnInit {
             file: file,
             preview: ''
           });
+          this.cdr.detectChanges();
         }
       });
     }
@@ -168,6 +181,7 @@ export class TaskFormComponent implements OnInit {
   }
 
   getFileIcon(fileType: string): string {
+    if (!fileType) return '📎';
     if (fileType.startsWith('image/')) {
       return '🖼️';
     } else if (fileType.includes('pdf')) {
@@ -187,4 +201,3 @@ export class TaskFormComponent implements OnInit {
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
   }
 }
-

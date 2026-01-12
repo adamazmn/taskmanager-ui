@@ -1,15 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { RouterModule, Router } from '@angular/router';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TaskService } from '../services/task.service';
-import { Task } from '../models/task.model';
+import { AuthService } from '../services/auth.service';
+import { Task, TaskAttachment } from '../models/task.model';
 import { ModalComponent, ModalConfig } from '../shared/components/modal/modal.component';
+import { SafePipe } from '../shared/pipes/safe.pipe';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, ModalComponent],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, ModalComponent, SafePipe],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss']
 })
@@ -19,12 +21,20 @@ export class TaskListComponent implements OnInit {
   filterStatus: 'all' | 'pending' | 'done' = 'all';
   filterDateAdded: string = '';
   filterDueDate: string = '';
-  isLoading = false;
+  searchQuery: string = '';
+  isLoadingTasks = false;
+  isSubmitting = false;
   showModal = false;
+  isEditing = false;
+  editingTaskId: string | null = null;
   showStatusConfirmModal = false;
   showDeleteConfirmModal = false;
   selectedTaskForStatusChange: Task | null = null;
   taskToDelete: string | null = null;
+  showAttachmentModal = false;
+  selectedAttachment: TaskAttachment | null = null;
+  selectedTaskForAttachments: Task | null = null;
+
   statusConfirmModalConfig: ModalConfig = {
     type: 'warning',
     message: '',
@@ -34,6 +44,7 @@ export class TaskListComponent implements OnInit {
     yesText: 'Yes',
     noText: 'No'
   };
+
   deleteConfirmModalConfig: ModalConfig = {
     type: 'warning',
     message: 'Are you sure you want to delete this task?',
@@ -43,21 +54,25 @@ export class TaskListComponent implements OnInit {
     yesText: 'Yes',
     noText: 'No'
   };
+
   successModalConfig: ModalConfig = {
     type: 'success',
     message: '',
     showClose: true
   };
+
   errorModalConfig: ModalConfig = {
     type: 'error',
     message: '',
     showClose: true
   };
+
   showSuccessModal = false;
   showErrorModal = false;
   taskForm!: FormGroup;
   selectedFiles: File[] = [];
   filePreviews: { file: File; preview: string }[] = [];
+  private readonly apiBaseUrl = 'http://localhost:8080';
   currentDate: string = '';
   currentUser = {
     username: 'johndoe',
@@ -66,9 +81,25 @@ export class TaskListComponent implements OnInit {
 
   constructor(
     private taskService: TaskService,
-    private fb: FormBuilder
+    private authService: AuthService,
+    private fb: FormBuilder,
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {
     this.initForm();
+    const username = this.authService.getUsername();
+    if (username) {
+      this.currentUser.username = username;
+    }
+  }
+
+  logout(): void {
+    this.authService.logout();
+    this.router.navigate(['/']);
+  }
+
+  toggleTheme(): void {
+    document.documentElement.classList.toggle('dark');
   }
 
   ngOnInit(): void {
@@ -88,8 +119,8 @@ export class TaskListComponent implements OnInit {
 
   initForm(): void {
     this.taskForm = this.fb.group({
-      title: ['', [Validators.required, Validators.minLength(3)]],
-      description: ['', [Validators.required, Validators.minLength(10)]],
+      title: ['', [Validators.required]],
+      description: ['', [Validators.required]],
       status: ['pending', Validators.required],
       dueDate: [null]
     });
@@ -97,11 +128,32 @@ export class TaskListComponent implements OnInit {
 
   openModal(): void {
     this.showModal = true;
+    this.isEditing = false;
+    this.editingTaskId = null;
     this.resetForm();
+  }
+
+  openEditModal(task: Task): void {
+    this.showModal = true;
+    this.isEditing = true;
+    this.editingTaskId = task.id;
+    
+    // Populate form with task details
+    this.taskForm.patchValue({
+      title: task.title,
+      description: task.description,
+      status: task.status,
+      dueDate: task.dueDate ? new Date(task.dueDate).toISOString().split('T')[0] : null
+    });
+
+    this.selectedFiles = [];
+    this.filePreviews = [];
   }
 
   closeModal(): void {
     this.showModal = false;
+    this.isEditing = false;
+    this.editingTaskId = null;
     this.resetForm();
   }
 
@@ -117,16 +169,48 @@ export class TaskListComponent implements OnInit {
   }
 
   loadTasks(): void {
-    this.isLoading = true;
-    this.taskService.getTasks().subscribe({
-      next: (tasks) => {
-        this.tasks = tasks;
-        this.applyFilter();
-        this.isLoading = false;
+    const username = this.authService.getUsername();
+    if (!username) {
+      console.error('No username found, cannot load tasks');
+      return;
+    }
+
+    this.isLoadingTasks = true;
+    this.taskService.getUserTaskDetail(username).subscribe({
+      next: (response: any) => {
+        if (response.status === '200' && response.data) {
+          console.log('Tasks fetched:', response.data);
+          const rawTasks = response.data.tasks || [];
+          // Map backend response to frontend model
+          this.tasks = rawTasks.map((t: any) => {
+            let parsedAttachments = [];
+            try {
+              if (t.attachments && typeof t.attachments === 'string') {
+                parsedAttachments = JSON.parse(t.attachments);
+              } else if (Array.isArray(t.attachments)) {
+                parsedAttachments = t.attachments;
+              }
+            } catch (e) {
+              console.warn('Failed to parse attachments for task', t.id, e);
+            }
+
+            return {
+              ...t,
+              status: t.status ? t.status.toLowerCase() : 'pending', // Normalize status
+              attachments: parsedAttachments
+            };
+          });
+
+          this.currentUser.name = response.data.name || this.currentUser.name;
+          this.applyFilter();
+        }
+        this.isLoadingTasks = false;
+        this.cdr.detectChanges();
       },
-      error: (error) => {
+      error: (error: any) => {
         console.error('Error loading tasks:', error);
-        this.isLoading = false;
+        this.isLoadingTasks = false;
+        this.cdr.detectChanges();
       }
     });
   }
@@ -134,12 +218,19 @@ export class TaskListComponent implements OnInit {
   applyFilter(): void {
     let filtered = [...this.tasks];
 
-    // Filter by status
+    // Search filter
+    if (this.searchQuery.trim()) {
+      const query = this.searchQuery.toLowerCase().trim();
+      filtered = filtered.filter(task => 
+        task.title.toLowerCase().includes(query) || 
+        task.description.toLowerCase().includes(query)
+      );
+    }
+
     if (this.filterStatus !== 'all') {
       filtered = filtered.filter(task => task.status === this.filterStatus);
     }
 
-    // Filter by date added (new tasks)
     if (this.filterDateAdded) {
       const filterDate = new Date(this.filterDateAdded);
       filtered = filtered.filter(task => {
@@ -148,7 +239,6 @@ export class TaskListComponent implements OnInit {
       });
     }
 
-    // Filter by due date
     if (this.filterDueDate) {
       const filterDate = new Date(this.filterDueDate);
       filtered = filtered.filter(task => {
@@ -176,9 +266,16 @@ export class TaskListComponent implements OnInit {
     this.applyFilter();
   }
 
-  clearDateFilters(): void {
+  clearFilters(): void {
+    this.filterStatus = 'all';
     this.filterDateAdded = '';
     this.filterDueDate = '';
+    this.searchQuery = '';
+    this.applyFilter();
+  }
+
+  onSearchChange(query: string): void {
+    this.searchQuery = query;
     this.applyFilter();
   }
 
@@ -190,28 +287,35 @@ export class TaskListComponent implements OnInit {
   onDeleteConfirmYes(): void {
     if (this.taskToDelete) {
       this.taskService.deleteTask(this.taskToDelete).subscribe({
-        next: () => {
+        next: (response: any) => {
+          console.log('Delete response:', response);
           this.tasks = this.tasks.filter(task => task.id !== this.taskToDelete);
           this.applyFilter();
           this.showDeleteConfirmModal = false;
           this.taskToDelete = null;
-          this.showSuccessModal = true;
+          
           this.successModalConfig = {
             type: 'success',
+            title: 'Delete Successful',
             message: 'Task deleted successfully!',
             showClose: true
           };
+          this.showSuccessModal = true;
+          this.cdr.detectChanges();
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error deleting task:', error);
           this.showDeleteConfirmModal = false;
           this.taskToDelete = null;
-          this.showErrorModal = true;
+          
           this.errorModalConfig = {
             type: 'error',
+            title: 'Delete Failed',
             message: 'Failed to delete task. Please try again.',
             showClose: true
           };
+          this.showErrorModal = true;
+          this.cdr.detectChanges();
         }
       });
     }
@@ -245,35 +349,69 @@ export class TaskListComponent implements OnInit {
   onStatusConfirmYes(): void {
     if (this.selectedTaskForStatusChange) {
       const task = this.selectedTaskForStatusChange;
-      const newStatus = task.status === 'pending' ? 'done' : 'pending';
-      this.taskService.updateTask(task.id, { ...task, status: newStatus }).subscribe({
-        next: (updatedTask) => {
+      // Determine new status (Capitalized for Backend)
+      const isCurrentlyDone = task.status && task.status.toLowerCase() === 'done';
+      const newStatusForBackend = isCurrentlyDone ? 'Pending' : 'Done';
+      const newStatusForFrontend = newStatusForBackend.toLowerCase();
+      
+      const updateDto = {
+        taskId: task.id,
+        title: task.title,
+        description: task.description,
+        status: newStatusForBackend,
+        dueDate: task.dueDate
+      };
+      
+      console.log('Parameters update:', updateDto);
+
+      this.taskService.updateTask(updateDto).subscribe({
+        next: (response: any) => {
+          console.log('Update response:', response);
+          // Backend returns updated task object
+          const updatedTaskData = response.data;
+          // Normalize status
+          updatedTaskData.status = updatedTaskData.status ? updatedTaskData.status.toLowerCase() : newStatusForFrontend;
+
           const index = this.tasks.findIndex(t => t.id === task.id);
           if (index !== -1) {
-            this.tasks[index] = updatedTask;
+            // Preserve existing attachments since update doesn't change them
+            // and backend returns attachments as string
+            const existingAttachments = this.tasks[index].attachments;
+            this.tasks[index] = { 
+              ...this.tasks[index], 
+              ...updatedTaskData,
+              attachments: existingAttachments 
+            };
             this.applyFilter();
           }
           this.closeStatusConfirmModal();
-          this.showSuccessModal = true;
+          
           this.successModalConfig = {
             type: 'success',
+            title: 'Update Successful',
             message: 'Task status updated successfully!',
             showClose: true
           };
+          this.showSuccessModal = true;
+          this.cdr.detectChanges();
         },
-        error: (error) => {
+        error: (error: any) => {
           console.error('Error updating task:', error);
           this.closeStatusConfirmModal();
-          this.showErrorModal = true;
+          
           this.errorModalConfig = {
             type: 'error',
+            title: 'Update Failed',
             message: 'Failed to update task status. Please try again.',
             showClose: true
           };
+          this.showErrorModal = true;
+          this.cdr.detectChanges();
         }
       });
     }
   }
+
 
   onStatusConfirmNo(): void {
     this.closeStatusConfirmModal();
@@ -281,48 +419,116 @@ export class TaskListComponent implements OnInit {
 
   onSubmit(): void {
     if (this.taskForm.valid) {
-      this.isLoading = true;
+      this.isSubmitting = true;
       const formValue = this.taskForm.value;
-
-      // Convert selected files to attachment format
-      const attachments = this.selectedFiles.map((file, index) => ({
-        id: `file-${Date.now()}-${index}`,
-        fileName: file.name,
-        fileUrl: this.filePreviews[index]?.preview || URL.createObjectURL(file),
-        fileType: file.type,
-        fileSize: file.size,
-        uploadedAt: new Date().toISOString()
-      }));
-
-      const taskData = {
+      
+      // Sanitize form value: Convert empty dueDate to null to avoid JSON parsing errors
+      const sanitizedFormValue = {
         ...formValue,
-        attachments: attachments.length > 0 ? attachments : undefined
+        dueDate: formValue.dueDate ? formValue.dueDate : null
       };
 
-      this.taskService.createTask(taskData).subscribe({
-        next: (newTask) => {
-          this.tasks.push(newTask);
-          this.applyFilter();
-          this.closeModal();
-          this.isLoading = false;
-          this.showSuccessModal = true;
-          this.successModalConfig = {
-            type: 'success',
-            message: 'Task created successfully!',
-            showClose: true
-          };
-        },
-        error: (error) => {
-          console.error('Error creating task:', error);
-          this.isLoading = false;
-          this.showErrorModal = true;
-          this.errorModalConfig = {
-            type: 'error',
-            message: 'Failed to create task. Please try again.',
-            showClose: true
-          };
-        }
-      });
+      // Capitalize status for Backend (Pending/Done) to match DB constraints
+      const statusForBackend = sanitizedFormValue.status ? 
+        sanitizedFormValue.status.charAt(0).toUpperCase() + sanitizedFormValue.status.slice(1) : null;
+
+      if (this.isEditing && this.editingTaskId) {
+        // Update existing task
+        const updateDto = {
+            taskId: this.editingTaskId,
+            ...sanitizedFormValue,
+            status: statusForBackend
+        };
+        console.log('Parameters update (Form):', updateDto);
+        this.taskService.updateTask(updateDto).subscribe({
+          next: (response: any) => {
+            console.log('Update response (Form):', response);
+            const updatedTask = response.data;
+            
+            // Normalize
+            updatedTask.status = updatedTask.status ? updatedTask.status.toLowerCase() : updatedTask.status;
+
+            const index = this.tasks.findIndex(t => t.id === updatedTask.id);
+            if (index !== -1) {
+              // Preserve existing attachments since update doesn't change them
+              // and backend returns attachments as string
+              const existingAttachments = this.tasks[index].attachments;
+              this.tasks[index] = { 
+                ...this.tasks[index], 
+                ...updatedTask,
+                attachments: existingAttachments 
+              };
+              this.applyFilter();
+            }
+            this.closeModal();
+            this.isSubmitting = false;
+            
+            this.successModalConfig = {
+              type: 'success',
+              title: 'Update Successful',
+              message: 'Task updated successfully!',
+              showClose: true
+            };
+            this.showSuccessModal = true;
+            this.cdr.detectChanges();
+          },
+          error: (error: any) => {
+            console.error('Error updating task:', error);
+            this.isSubmitting = false;
+            
+            this.errorModalConfig = {
+              type: 'error',
+              title: 'Update Failed',
+              message: 'Failed to update task. Please try again.',
+              showClose: true
+            };
+            this.showErrorModal = true;
+            this.cdr.detectChanges();
+          }
+        });
+      } else {
+        // Create new task
+        const createDto = {
+            username: this.currentUser.username,
+            ...sanitizedFormValue,
+            status: statusForBackend
+        };
+        console.log('Parameters create:', createDto);
+        // Use FormData handling via service
+        this.taskService.createTask(createDto, this.selectedFiles[0]).subscribe({
+          next: (response: any) => {
+            console.log('Create response:', response);
+            // Backend returns only ID (e.g., "cf7...") in response.data for create.
+            // So we MUST reload the entire list to get the formatted Task object (dates, status, etc)
+            this.loadTasks();
+
+            this.closeModal();
+            this.isSubmitting = false;
+            
+            this.successModalConfig = {
+              type: 'success',
+              title: 'Create Successful',
+              message: 'Task created successfully!',
+              showClose: true
+            };
+            this.showSuccessModal = true;
+            this.cdr.detectChanges();
+          },
+          error: (error: any) => {
+            console.error('Error creating task:', error);
+            this.isSubmitting = false;
+            
+            this.errorModalConfig = {
+              type: 'error',
+              title: 'Create Failed',
+              message: 'Failed to create task. Please try again.',
+              showClose: true
+            };
+            this.showErrorModal = true;
+            this.cdr.detectChanges();
+          }
+        });
+      }
     } else {
       this.markFormGroupTouched();
     }
@@ -347,6 +553,7 @@ export class TaskListComponent implements OnInit {
               file: file,
               preview: e.target.result
             });
+            this.cdr.detectChanges();
           };
           reader.readAsDataURL(file);
         } else {
@@ -354,6 +561,7 @@ export class TaskListComponent implements OnInit {
             file: file,
             preview: ''
           });
+          this.cdr.detectChanges();
         }
       });
     }
@@ -365,6 +573,7 @@ export class TaskListComponent implements OnInit {
   }
 
   getFileIcon(fileType: string): string {
+    if (!fileType) return '📎';
     if (fileType.startsWith('image/')) {
       return '🖼️';
     } else if (fileType.includes('pdf')) {
@@ -384,6 +593,73 @@ export class TaskListComponent implements OnInit {
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
   }
 
+  // Attachment viewing methods
+  getAttachmentUrl(attachment: TaskAttachment): string {
+    return `${this.apiBaseUrl}/files/${attachment.storedName}`;
+  }
+
+  openAttachmentPreview(task: Task): void {
+    this.selectedTaskForAttachments = task;
+    if (task.attachments && task.attachments.length > 0) {
+      this.selectedAttachment = task.attachments[0];
+    }
+    this.showAttachmentModal = true;
+  }
+
+  closeAttachmentPreview(): void {
+    this.showAttachmentModal = false;
+    this.selectedAttachment = null;
+    this.selectedTaskForAttachments = null;
+  }
+
+  selectAttachment(attachment: TaskAttachment): void {
+    this.selectedAttachment = attachment;
+  }
+
+  downloadAttachment(attachment: TaskAttachment): void {
+    const url = this.getAttachmentUrl(attachment);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = attachment.originalName;
+    link.target = '_blank';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  isImageFile(attachment: TaskAttachment): boolean {
+    return attachment.contentType?.startsWith('image/') || false;
+  }
+
+  isPdfFile(attachment: TaskAttachment): boolean {
+    return attachment.contentType === 'application/pdf';
+  }
+
+  getAttachmentIcon(attachment: TaskAttachment): string {
+    if (!attachment.contentType) return 'attachment';
+    if (attachment.contentType.startsWith('image/')) {
+      return 'image';
+    } else if (attachment.contentType.includes('pdf')) {
+      return 'picture_as_pdf';
+    } else if (attachment.contentType.includes('word') || attachment.contentType.includes('document')) {
+      return 'description';
+    } else if (attachment.contentType.includes('excel') || attachment.contentType.includes('spreadsheet')) {
+      return 'table_chart';
+    } else if (attachment.contentType.startsWith('video/')) {
+      return 'videocam';
+    } else {
+      return 'attachment';
+    }
+  }
+
+  get filteredActiveTasks(): Task[] {
+    return this.filteredTasks.filter(task => task.status === 'pending');
+  }
+
+  get filteredCompletedTasks(): Task[] {
+    return this.filteredTasks.filter(task => task.status === 'done');
+  }
+
   get title() {
     return this.taskForm.get('title');
   }
@@ -391,5 +667,12 @@ export class TaskListComponent implements OnInit {
   get description() {
     return this.taskForm.get('description');
   }
-}
 
+  handleSuccessModalClose() {
+    this.showSuccessModal = false;
+  }
+
+  handleErrorModalClose() {
+    this.showErrorModal = false;
+  }
+}
