@@ -1,53 +1,88 @@
 <div
-  class="bg-background-light dark:bg-background-dark text-zinc-900 dark:text-zinc-100 transition-colors duration-300 min-h-screen flex flex-col">
-  <header
-    class="sticky top-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-zinc-200 dark:border-zinc-800">
-    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-      <div class="flex items-center gap-12">
-        <div class="flex items-center gap-2.5">
-          <div class="w-8 h-8 bg-black dark:bg-white rounded-full flex items-center justify-center">
-            <span class="text-white dark:text-black text-xs font-bold">M</span>
-          </div>
-          <span class="logo-text">MYDAILY</span>
+  class="flex h-screen overflow-hidden bg-background-light dark:bg-background-dark text-zinc-900 dark:text-zinc-100 transition-colors duration-300">
+
+  <!-- Sidebar -->
+  <aside
+    class="w-64 border-r border-gray-200 dark:border-gray-800 bg-white/50 dark:bg-black/20 backdrop-blur-md z-50 hidden lg:flex flex-col h-full">
+    <div class="p-8 flex-1 flex flex-col h-full">
+      <div class="mb-12 flex items-center gap-3">
+        <div class="w-8 h-8 bg-primary dark:bg-white rounded-full flex items-center justify-center">
+          <span class="text-white dark:text-primary text-xs font-bold">M</span>
         </div>
-        <nav class="hidden md:flex items-center gap-8">
-          <a routerLink="/tasks"
-            class="text-sm font-semibold text-zinc-900 dark:text-white border-b-2 border-primary pb-1">Tasks</a>
-          <a href="#"
-            class="text-sm font-medium text-zinc-500 dark:text-zinc-400 hover:text-primary transition-colors">Journal</a>
-          <a href="#"
-            class="text-sm font-medium text-zinc-500 dark:text-zinc-400 hover:text-primary transition-colors">Insights</a>
-        </nav>
-      </div>
-      <div class="flex items-center gap-4">
-        <button (click)="logout()" title="Logout"
-          class="p-2 rounded-full hover:bg-rose-50 dark:hover:bg-rose-900/20 text-rose-500 transition-colors">
-          <span class="material-symbols-outlined">logout</span>
-        </button>
-        <button class="p-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors">
-          <span class="material-symbols-outlined text-zinc-600 dark:text-zinc-400">notifications</span>
-        </button>
-        <div
-          class="h-10 w-10 rounded-full border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-zinc-200 dark:bg-zinc-800">
-          <img
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBj6U-m6CUKbTn1-MPqBeKdiypVzVnQnlGgPHQdPJN02tfVBxCT5QFOhBLIJ1qMdLI-NpGRRH_HIZG181vZwHHsF26pssRmjo6XUCRUWWxBvIXxYoA9JJSnbawodxRitLjBnhE5ABb-aQsPVsf9Y5GbsDVKEO-ML907mWbOAG2Ns5pJupNUE8mz7f-3WLUn-5_xZFb8kYWVJV2L70VQj9LWR667IEWN551I9dgAR93F7Hlbvsykk3TWyPar-10fD9WEg8V_JsoKY4mT"
-            alt="User Profile" class="w-full h-full object-cover">
-        </div>
+        <h1 class="display-font text-xl font-semibold tracking-tight uppercase">MYDAILY</h1>
       </div>
 
-    </div>
-  </header>
+      <nav class="flex-1 space-y-6">
+        <div>
+          <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-4 font-semibold">Overview</p>
+          <ul class="space-y-1">
+            <li>
+              <a routerLink="/dashboard"
+                class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-white/10">
+                <span class="material-symbols-outlined text-xl">dashboard</span> Dashboard
+              </a>
+            </li>
+            <li>
+              <a routerLink="/tasks"
+                class="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-lg bg-gray-100 dark:bg-white/10 hover:bg-gray-200 dark:hover:bg-white/20 transition-colors">
+                <span class="material-symbols-outlined text-xl">assignment</span> Tasks
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div>
+          <p class="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-4 font-semibold">Account</p>
+          <ul class="space-y-1">
+            <li>
+              <a routerLink="/profile"
+                class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors rounded-lg hover:bg-gray-100 dark:hover:bg-white/10">
+                <span class="material-symbols-outlined text-xl">person</span> Profile
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
 
-  <main class="max-w-7xl mx-auto px-6 py-12 flex-grow w-full">
-    <div class="mb-12">
-      <h1 class="font-display text-5xl font-light tracking-tight mb-4 text-primary dark:text-white">Focus on what
-        matters</h1>
-      <p class="text-zinc-500 dark:text-zinc-400 max-w-xl text-lg">Simplified management for your high-performance
-        workflow. Clear the noise, track the impact.</p>
+      <div class="pt-8 border-t border-gray-100 dark:border-gray-800 mt-auto space-y-2">
+        <button (click)="toggleTheme()"
+          class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-500 hover:text-primary dark:hover:text-white transition-colors w-full text-left rounded-lg hover:bg-gray-100 dark:hover:bg-white/10">
+          <span class="material-symbols-outlined text-xl">dark_mode</span> Appearance
+        </button>
+        <button (click)="logout()"
+          class="flex items-center gap-3 px-3 py-2 text-sm font-medium text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-900/20 transition-colors w-full text-left rounded-lg">
+          <span class="material-symbols-outlined text-xl">logout</span> Logout
+        </button>
+      </div>
     </div>
+  </aside>
 
+  <!-- Main Content -->
+  <main class="flex-1 h-full overflow-y-auto p-6 lg:p-12 relative">
+    <!-- Header -->
+    <header class="flex justify-between items-center mb-12">
+      <div>
+        <h2 class="display-font text-3xl font-light tracking-tight">Tasks</h2>
+        <p class="text-gray-400 text-sm mt-1">Manage your daily tasks</p>
+      </div>
+    </header>
+
+    <!-- Filters and Create Button -->
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
       <div class="flex flex-wrap items-center gap-3">
+        <!-- Search Input -->
+        <div class="relative">
+          <div
+            class="flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-zinc-400 transition-all focus-within:border-primary min-w-[200px]">
+            <span class="material-symbols-outlined text-zinc-400 text-sm">search</span>
+            <input type="text" [ngModel]="searchQuery" (ngModelChange)="onSearchChange($event)"
+              class="bg-transparent border-0 p-0 text-sm font-medium focus:ring-0 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 w-full outline-none"
+              placeholder="Search tasks...">
+            <button *ngIf="searchQuery" (click)="onSearchChange('')"
+              class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors">
+              <span class="material-symbols-outlined text-sm">close</span>
+            </button>
+          </div>
+        </div>
         <div class="relative group">
           <div
             class="flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-zinc-400 transition-all focus-within:border-primary">
@@ -94,6 +129,7 @@
       </button>
     </div>
 
+    <!-- Task Lists -->
     <div class="space-y-4">
       <div class="flex items-center gap-4 mb-6">
         <h3 class="text-xs font-bold uppercase tracking-widest text-zinc-400">Active Tasks</h3>
@@ -131,10 +167,11 @@
                   <span class="material-symbols-outlined text-sm">calendar_today</span>
                   Due: {{ task.dueDate | date:'MMM d, y' }}
                 </div>
-                <div *ngIf="task.attachments?.length" class="flex items-center gap-1.5 text-xs text-zinc-400">
+                <button *ngIf="task.attachments?.length" (click)="openAttachmentPreview(task); $event.stopPropagation()"
+                  class="flex items-center gap-1.5 text-xs text-primary hover:text-primary-dark dark:text-primary-light dark:hover:text-white transition-colors bg-primary/5 hover:bg-primary/10 dark:bg-primary/10 dark:hover:bg-primary/20 px-2 py-1 rounded-md cursor-pointer">
                   <span class="material-symbols-outlined text-sm">attachment</span>
-                  {{ task.attachments?.length }} Files
-                </div>
+                  {{ task.attachments?.length }} {{ task.attachments?.length === 1 ? 'File' : 'Files' }}
+                </button>
               </div>
             </div>
           </div>
@@ -180,6 +217,11 @@
                 <span class="material-symbols-outlined text-sm">check_circle</span>
                 Completed
               </div>
+              <button *ngIf="task.attachments?.length" (click)="openAttachmentPreview(task); $event.stopPropagation()"
+                class="flex items-center gap-1.5 text-xs text-zinc-400 hover:text-primary dark:hover:text-primary-light transition-colors bg-zinc-100 hover:bg-zinc-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 px-2 py-1 rounded-md cursor-pointer ml-4">
+                <span class="material-symbols-outlined text-sm">attachment</span>
+                {{ task.attachments?.length }} {{ task.attachments?.length === 1 ? 'File' : 'Files' }}
+              </button>
             </div>
           </div>
           <div class="flex items-center gap-2">
@@ -199,56 +241,17 @@
     </div>
   </main>
 
-  <footer class="max-w-7xl mx-auto px-6 pt-24 pb-12 border-t border-zinc-200 dark:border-zinc-800 mt-24 w-full">
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-12 mb-16">
-      <div>
-        <h4 class="font-display font-medium mb-6">Explore</h4>
-        <ul class="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
-          <li><a href="#" class="hover:text-primary transition-colors">Technology</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">Journal</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-display font-medium mb-6">About</h4>
-        <ul class="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
-          <li><a href="#" class="hover:text-primary transition-colors">Company</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">Careers</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4 class="font-display font-medium mb-6">Social</h4>
-        <ul class="space-y-4 text-sm text-zinc-500 dark:text-zinc-400">
-          <li><a href="#" class="hover:text-primary transition-colors">Instagram</a></li>
-          <li><a href="#" class="hover:text-primary transition-colors">YouTube</a></li>
-        </ul>
-      </div>
-      <div class="col-span-2 md:col-span-1">
-        <p class="text-xs text-zinc-400 uppercase tracking-widest mb-4">Stay updated</p>
-        <div class="flex gap-2">
-          <input type="email" placeholder="Email address"
-            class="flex-1 bg-transparent border-b border-zinc-300 dark:border-zinc-700 py-2 text-sm focus:border-primary outline-none transition-colors">
-          <button class="text-sm font-medium hover:text-primary transition-colors">Subscribe</button>
-        </div>
-      </div>
-    </div>
-    <div
-      class="flex flex-col md:flex-row justify-between items-center gap-6 pt-12 border-t border-zinc-200 dark:border-zinc-800">
-      <span class="text-xs text-zinc-400">© 2024 MYDAILY Robotics Inc.</span>
-      <div class="flex gap-8 text-xs text-zinc-400 uppercase tracking-widest">
-        <a href="#" class="hover:text-primary transition-colors">Terms</a>
-        <a href="#" class="hover:text-primary transition-colors">Privacy</a>
-      </div>
-    </div>
-  </footer>
-
-  <div class="fixed bottom-12 right-12 hidden lg:block opacity-[0.03] pointer-events-none">
-    <div class="w-[400px] h-[400px] border-[40px] border-primary rounded-full"></div>
-  </div>
+  <!-- Mobile Menu Button -->
+  <button
+    class="fixed bottom-6 right-6 lg:hidden w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center z-[100]">
+    <span class="material-symbols-outlined">menu</span>
+  </button>
 
   <!-- Task Creation Modal and other modals remain standard, but can be styled similarly if needed -->
-  <div *ngIf="showModal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+  <div *ngIf="showModal"
+    class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 overflow-y-auto">
     <div
-      class="bg-card-light dark:bg-card-dark w-full max-w-2xl rounded-xl shadow-2xl overflow-hidden border border-slate-200/50 dark:border-slate-800/50 animate-in fade-in zoom-in duration-300 bg-white dark:bg-zinc-900">
+      class="bg-card-light dark:bg-card-dark w-full max-w-2xl max-h-[90vh] rounded-xl shadow-2xl overflow-y-auto border border-slate-200/50 dark:border-slate-800/50 animate-in fade-in zoom-in duration-300 bg-white dark:bg-zinc-900 my-auto">
       <div class="px-8 pt-8 pb-4 flex justify-between items-start">
         <div>
           <h2 class="text-3xl font-display font-medium tracking-tight text-slate-900 dark:text-white">{{ isEditing ?
@@ -367,5 +370,127 @@
     (close)="handleSuccessModalClose()"></app-modal>
   <app-modal class="relative z-[9999]" [isOpen]="showErrorModal" [config]="errorModalConfig"
     (close)="handleErrorModalClose()"></app-modal>
+
+  <!-- Attachment Preview Modal -->
+  <div *ngIf="showAttachmentModal"
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm z-[9999] flex items-center justify-center p-4"
+    (click)="closeAttachmentPreview()">
+    <div
+      class="bg-white dark:bg-zinc-900 w-full max-w-4xl max-h-[90vh] rounded-2xl shadow-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 animate-in fade-in zoom-in duration-300"
+      (click)="$event.stopPropagation()">
+      <!-- Modal Header -->
+      <div
+        class="px-6 py-4 border-b border-zinc-200 dark:border-zinc-800 flex items-center justify-between bg-zinc-50 dark:bg-zinc-900/80">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-primary/10 dark:bg-primary/20 flex items-center justify-center">
+            <span class="material-symbols-outlined text-primary">folder_open</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-semibold text-zinc-900 dark:text-white">Attachments</h3>
+            <p class="text-sm text-zinc-500 dark:text-zinc-400">{{ selectedTaskForAttachments?.title }}</p>
+          </div>
+        </div>
+        <button (click)="closeAttachmentPreview()"
+          class="p-2 hover:bg-zinc-200 dark:hover:bg-zinc-800 rounded-full transition-colors">
+          <span class="material-symbols-outlined text-zinc-600 dark:text-zinc-400">close</span>
+        </button>
+      </div>
+
+      <!-- Modal Content -->
+      <div class="flex flex-col md:flex-row h-[calc(90vh-200px)] min-h-[400px]">
+        <!-- File List Sidebar -->
+        <div
+          class="w-full md:w-64 border-b md:border-b-0 md:border-r border-zinc-200 dark:border-zinc-800 overflow-y-auto bg-zinc-50/50 dark:bg-zinc-900/50 p-3">
+          <p class="text-xs font-semibold uppercase tracking-widest text-zinc-400 mb-3 px-2">Files ({{
+            selectedTaskForAttachments?.attachments?.length }})</p>
+          <div class="space-y-1">
+            <button *ngFor="let attachment of selectedTaskForAttachments?.attachments"
+              (click)="selectAttachment(attachment)" [class.bg-primary/10]="selectedAttachment === attachment"
+              [class.border-primary]="selectedAttachment === attachment"
+              class="w-full flex items-center gap-3 p-3 rounded-lg border border-transparent hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-all text-left group">
+              <div class="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                [class]="isImageFile(attachment) ? 'bg-blue-100 dark:bg-blue-900/30' : 'bg-zinc-100 dark:bg-zinc-800'">
+                <span class="material-symbols-outlined text-lg"
+                  [class]="isImageFile(attachment) ? 'text-blue-600 dark:text-blue-400' : 'text-zinc-600 dark:text-zinc-400'">
+                  {{ getAttachmentIcon(attachment) }}
+                </span>
+              </div>
+              <div class="min-w-0 flex-1">
+                <p class="text-sm font-medium text-zinc-900 dark:text-white truncate">{{ attachment.originalName }}</p>
+                <p class="text-xs text-zinc-500 dark:text-zinc-400">{{ formatFileSize(attachment.size) }}</p>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        <!-- Preview Area -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+          <div *ngIf="selectedAttachment"
+            class="flex-1 flex flex-col items-center justify-center p-6 overflow-auto bg-zinc-100/50 dark:bg-zinc-950/50">
+            <!-- Image Preview -->
+            <img *ngIf="isImageFile(selectedAttachment)" [src]="getAttachmentUrl(selectedAttachment)"
+              [alt]="selectedAttachment.originalName" class="max-w-full max-h-full object-contain rounded-lg shadow-lg"
+              loading="lazy">
+
+            <!-- PDF Preview -->
+            <div *ngIf="isPdfFile(selectedAttachment)" class="w-full h-full flex flex-col items-center justify-center">
+              <iframe [src]="getAttachmentUrl(selectedAttachment) | safe:'resourceUrl'"
+                class="w-full h-full rounded-lg border border-zinc-200 dark:border-zinc-800" title="PDF Preview"
+                frameborder="0">
+              </iframe>
+            </div>
+
+            <!-- Other File Types -->
+            <div *ngIf="!isImageFile(selectedAttachment) && !isPdfFile(selectedAttachment)" class="text-center p-8">
+              <div
+                class="w-24 h-24 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center mx-auto mb-6">
+                <span class="material-symbols-outlined text-5xl text-zinc-400">{{ getAttachmentIcon(selectedAttachment)
+                  }}</span>
+              </div>
+              <h4 class="text-lg font-medium text-zinc-900 dark:text-white mb-2">{{ selectedAttachment.originalName }}
+              </h4>
+              <p class="text-sm text-zinc-500 dark:text-zinc-400 mb-6">This file type cannot be previewed directly.</p>
+              <button (click)="downloadAttachment(selectedAttachment)"
+                class="inline-flex items-center gap-2 px-6 py-3 bg-primary text-white rounded-lg font-medium hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined text-sm">download</span>
+                Download File
+              </button>
+            </div>
+          </div>
+
+          <!-- No Attachment Selected -->
+          <div *ngIf="!selectedAttachment"
+            class="flex-1 flex items-center justify-center bg-zinc-100/50 dark:bg-zinc-950/50">
+            <div class="text-center">
+              <span
+                class="material-symbols-outlined text-6xl text-zinc-300 dark:text-zinc-700 mb-4 block">attach_file</span>
+              <p class="text-zinc-500 dark:text-zinc-400">Select a file to preview</p>
+            </div>
+          </div>
+
+          <!-- Footer Actions -->
+          <div *ngIf="selectedAttachment"
+            class="px-6 py-4 border-t border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex items-center justify-between">
+            <div class="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+              <span class="material-symbols-outlined text-base">info</span>
+              {{ selectedAttachment.contentType }} • {{ formatFileSize(selectedAttachment.size) }}
+            </div>
+            <div class="flex items-center gap-2">
+              <a [href]="getAttachmentUrl(selectedAttachment)" target="_blank"
+                class="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-zinc-600 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-white hover:bg-zinc-100 dark:hover:bg-zinc-800 rounded-lg transition-colors">
+                <span class="material-symbols-outlined text-base">open_in_new</span>
+                Open in New Tab
+              </a>
+              <button (click)="downloadAttachment(selectedAttachment)"
+                class="inline-flex items-center gap-2 px-4 py-2 bg-primary text-white text-sm font-medium rounded-lg hover:opacity-90 transition-opacity">
+                <span class="material-symbols-outlined text-base">download</span>
+                Download
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 </div>
