@@ -4,11 +4,13 @@ import { Observable, map } from 'rxjs';
 import { Task } from '../models/task.model';
 import { AuthService } from './auth.service';
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class TaskService {
-  private apiUrl = 'http://localhost:8080/task';
+  private apiUrl = `${environment.apiUrl}/task`;
 
   constructor(
     private http: HttpClient,
