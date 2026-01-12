@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit, AfterViewInit {
   revealElements!: QueryList<ElementRef<HTMLElement>>;
 
   isLoggedIn = false;
+  openFaq: number | null = null;
 
   constructor(
     private authService: AuthService,
@@ -37,6 +38,10 @@ export class HomeComponent implements OnInit, AfterViewInit {
 
   toggleDarkMode(): void {
     document.documentElement.classList.toggle('dark');
+  }
+
+  toggleFaq(index: number): void {
+    this.openFaq = this.openFaq === index ? null : index;
   }
 
   ngAfterViewInit(): void {

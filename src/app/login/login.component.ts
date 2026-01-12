@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule, Router } from '@angular/router';
@@ -19,6 +19,10 @@ export class LoginComponent implements OnInit {
   isLoading = false;
   errorMessage = '';
 
+  // Mouse tracking for space background effect
+  mouseX = 0;
+  mouseY = 0;
+
   // Modal properties
   isModalOpen = false;
   modalConfig: ModalConfig = {
@@ -37,6 +41,12 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     // Theme initialization if needed
+  }
+
+  onMouseMove(event: MouseEvent, container: HTMLElement): void {
+    const rect = container.getBoundingClientRect();
+    this.mouseX = event.clientX - rect.left;
+    this.mouseY = event.clientY - rect.top;
   }
 
   toggleTheme() {

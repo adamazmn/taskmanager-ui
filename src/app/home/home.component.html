@@ -8,10 +8,6 @@
       <span class="font-display text-xl font-semibold tracking-tight">MYDAILY</span>
     </div>
     <div class="hidden md:flex items-center space-x-10 text-sm font-medium">
-      <a class="hover:text-primary/70 transition-colors" href="#">Platform</a>
-      <a class="hover:text-primary/70 transition-colors" href="#">Skill Library</a>
-      <a class="hover:text-primary/70 transition-colors" href="#">Resources</a>
-      <a class="hover:text-primary/70 transition-colors" href="#">Company</a>
     </div>
     <div class="flex items-center space-x-4">
       <button class="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
@@ -39,14 +35,9 @@
         </h1>
         <div
           class="relative mt-16 w-full aspect-video md:aspect-[21/9] rounded-xl md:rounded-[2rem] overflow-hidden bg-slate-200 dark:bg-slate-800">
-          <img alt="Cinematic office space with natural lighting" class="w-full h-full object-cover"
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAzqKeFfEC1_VTzjc-XnGIGviGAgDblzZOxFwapsWE_WvF6Zm8e0JntzrALvYIbzJnH8CgzTCi3E5CPsm25pbqcIIiCwUj-y3sNOv5JMcY_RsTD-_suYu8zEwrfQyiLommFksuA8kLOIP88iKmm4OzJIN8lIGudtvJeCsIZ0CyGflZSFh6bgFcoH8CFmn7Y-YluCFs6slikDJM84prINuJPGl88JH4dvBRABLFCzywqM0RtHWkFxU-15Z0poQdNiqwKY40umd9S-Brd" />
-          <div class="absolute inset-0 bg-black/10 flex items-center justify-center">
-            <button
-              class="w-20 h-20 bg-white/20 backdrop-blur-md border border-white/30 rounded-full flex items-center justify-center group hover:scale-110 transition-transform">
-              <span class="material-symbols-outlined text-white text-4xl group-hover:fill-current">play_arrow</span>
-            </button>
-          </div>
+          <img alt="Modern productive workspace" class="w-full h-full object-cover"
+            src="https://images.unsplash.com/photo-1497215728101-856f4ea42174?q=80&w=2070&auto=format&fit=crop" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
         </div>
         <div class="max-w-2xl mx-auto mt-12 text-lg md:text-xl font-light leading-relaxed opacity-80">
           Built for busy minds, MYDAILY works 24/7 to make your life lighter. Hand off your repetitive to-do's, so you
@@ -135,24 +126,50 @@
     </div>
   </section>
   <section class="py-24 px-6">
-    <div class="max-w-3xl mx-auto space-y-8">
+    <div class="max-w-3xl mx-auto space-y-4">
       <h3 class="text-sm font-medium tracking-widest uppercase opacity-40 mb-12">Frequently Asked Questions</h3>
-      <div #reveal class="reveal-on-scroll border-b border-slate-200 dark:border-slate-800 pb-6 group cursor-pointer">
-        <div class="flex items-center justify-between">
+
+      <!-- FAQ Item 1 -->
+      <div #reveal class="reveal-on-scroll border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+        <button (click)="toggleFaq(0)"
+          class="w-full flex items-center justify-between p-6 text-left hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
           <span class="text-xl font-light">How does MYDAILY learn?</span>
-          <span class="material-symbols-outlined opacity-40 group-hover:rotate-45 transition-transform">add</span>
+          <span class="material-symbols-outlined transition-transform" [class.rotate-45]="openFaq === 0">add</span>
+        </button>
+        <div class="overflow-hidden transition-all duration-300" [style.maxHeight]="openFaq === 0 ? '200px' : '0'">
+          <div class="px-6 pb-6 text-slate-600 dark:text-slate-400 font-light leading-relaxed">
+            MYDAILY uses advanced machine learning algorithms to analyze your work patterns, priorities, and
+            preferences. Over time, it learns what tasks are most important to you, when you're most productive, and how
+            you like to organize your day. The more you use it, the smarter it gets!
+          </div>
         </div>
       </div>
-      <div #reveal class="reveal-on-scroll border-b border-slate-200 dark:border-slate-800 pb-6 group cursor-pointer">
-        <div class="flex items-center justify-between">
+
+      <!-- FAQ Item 2 -->
+      <div #reveal class="reveal-on-scroll border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+        <button (click)="toggleFaq(1)"
+          class="w-full flex items-center justify-between p-6 text-left hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
           <span class="text-xl font-light">Is my data secure?</span>
-          <span class="material-symbols-outlined opacity-40 group-hover:rotate-45 transition-transform">add</span>
+          <span class="material-symbols-outlined transition-transform" [class.rotate-45]="openFaq === 1">add</span>
+        </button>
+        <div class="overflow-hidden transition-all duration-300" [style.maxHeight]="openFaq === 1 ? '200px' : '0'">
+          <div class="px-6 pb-6 text-slate-600 dark:text-slate-400 font-light leading-relaxed">
+            Yes, your data is encrypted and securely stored to ensure your privacy at all times.
+          </div>
         </div>
       </div>
-      <div #reveal class="reveal-on-scroll border-b border-slate-200 dark:border-slate-800 pb-6 group cursor-pointer">
-        <div class="flex items-center justify-between">
+
+      <!-- FAQ Item 3 -->
+      <div #reveal class="reveal-on-scroll border border-slate-200 dark:border-slate-800 rounded-xl overflow-hidden">
+        <button (click)="toggleFaq(2)"
+          class="w-full flex items-center justify-between p-6 text-left hover:bg-slate-50 dark:hover:bg-slate-900/50 transition-colors">
           <span class="text-xl font-light">How much does it cost?</span>
-          <span class="material-symbols-outlined opacity-40 group-hover:rotate-45 transition-transform">add</span>
+          <span class="material-symbols-outlined transition-transform" [class.rotate-45]="openFaq === 2">add</span>
+        </button>
+        <div class="overflow-hidden transition-all duration-300" [style.maxHeight]="openFaq === 2 ? '200px' : '0'">
+          <div class="px-6 pb-6 text-slate-600 dark:text-slate-400 font-light leading-relaxed">
+            It is currently completely free for all users to get started.
+          </div>
         </div>
       </div>
     </div>
