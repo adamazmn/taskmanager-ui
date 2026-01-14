@@ -679,12 +679,18 @@ export class TaskListComponent implements OnInit {
   }
 
   openAttachmentPreview(task: Task): void {
-    this.selectedTaskForAttachments = task;
-    this.showAttachmentModal = true;
     if (task.attachments && task.attachments.length > 0) {
-      setTimeout(() => {
-        this.selectAttachment(task.attachments![0]);
-      }, 100);
+      this.selectedTaskForAttachments = task; // Ensure reference is set
+      this.showAttachmentModal = true;
+      
+      // Force UI update to show modal immediately
+      this.cdr.detectChanges();
+      
+      // Auto-select first attachment without timeout
+      this.selectAttachment(task.attachments[0]);
+    } else {
+      this.selectedTaskForAttachments = task;
+      this.showAttachmentModal = true;
     }
   }
 
