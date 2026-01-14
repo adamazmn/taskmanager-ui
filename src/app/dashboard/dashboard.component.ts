@@ -4,11 +4,12 @@ import { RouterModule, Router } from '@angular/router';
 
 import { AuthService } from '../services/auth.service';
 import { TaskService } from '../services/task.service';
+import { ModalComponent, ModalConfig } from '../shared/components/modal/modal.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, ModalComponent],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
@@ -22,6 +23,19 @@ export class DashboardComponent implements OnInit {
   weeklyActivity: { day: string, count: number, height: string }[] = [];
   isLoading = false;
   userName = 'User';
+
+  // Logout confirmation modal
+  showLogoutConfirmModal = false;
+  logoutConfirmModalConfig: ModalConfig = {
+    type: 'warning',
+    title: 'Confirm Logout',
+    message: 'Are you sure you want to logout?',
+    showClose: false,
+    showYes: true,
+    showNo: true,
+    yesText: 'Yes, Logout',
+    noText: 'Cancel'
+  };
 
   constructor(
     private authService: AuthService,
@@ -163,9 +177,22 @@ export class DashboardComponent implements OnInit {
     }));
   }
 
-  logout(): void {
+  openLogoutConfirmModal(): void {
+    this.showLogoutConfirmModal = true;
+  }
+
+  onLogoutConfirmYes(): void {
+    this.showLogoutConfirmModal = false;
     this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  onLogoutConfirmNo(): void {
+    this.showLogoutConfirmModal = false;
+  }
+
+  logout(): void {
+    this.openLogoutConfirmModal();
   }
 
   toggleTheme() {

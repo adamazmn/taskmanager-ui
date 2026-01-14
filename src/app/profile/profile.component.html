@@ -157,4 +157,8 @@
   <!-- Notification Modal -->
   <app-modal [isOpen]="isModalOpen" [config]="modalConfig" (close)="handleModalClose()"></app-modal>
 
+  <!-- Logout Confirmation Modal -->
+  <app-modal class="relative z-[9999]" [isOpen]="showLogoutConfirmModal" [config]="logoutConfirmModalConfig"
+    (close)="onLogoutConfirmNo()" (yes)="onLogoutConfirmYes()" (no)="onLogoutConfirmNo()"></app-modal>
+
 </div>

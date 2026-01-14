@@ -7,6 +7,7 @@ import { AuthService } from '../services/auth.service';
 import { Task, TaskAttachment } from '../models/task.model';
 import { ModalComponent, ModalConfig } from '../shared/components/modal/modal.component';
 import { SafePipe } from '../shared/pipes/safe.pipe';
+import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-task-list',
@@ -69,10 +70,22 @@ export class TaskListComponent implements OnInit {
 
   showSuccessModal = false;
   showErrorModal = false;
+  showLogoutConfirmModal = false;
+
+  logoutConfirmModalConfig: ModalConfig = {
+    type: 'warning',
+    title: 'Confirm Logout',
+    message: 'Are you sure you want to logout?',
+    showClose: false,
+    showYes: true,
+    showNo: true,
+    yesText: 'Yes, Logout',
+    noText: 'Cancel'
+  };
   taskForm!: FormGroup;
   selectedFiles: File[] = [];
   filePreviews: { file: File; preview: string }[] = [];
-  private readonly apiBaseUrl = 'http://localhost:8080';
+  private readonly apiBaseUrl = environment.apiUrl;
   currentDate: string = '';
   currentUser = {
     username: 'johndoe',
@@ -93,9 +106,22 @@ export class TaskListComponent implements OnInit {
     }
   }
 
-  logout(): void {
+  openLogoutConfirmModal(): void {
+    this.showLogoutConfirmModal = true;
+  }
+
+  onLogoutConfirmYes(): void {
+    this.showLogoutConfirmModal = false;
     this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  onLogoutConfirmNo(): void {
+    this.showLogoutConfirmModal = false;
+  }
+
+  logout(): void {
+    this.openLogoutConfirmModal();
   }
 
   toggleTheme(): void {
@@ -440,26 +466,12 @@ export class TaskListComponent implements OnInit {
             status: statusForBackend
         };
         console.log('Parameters update (Form):', updateDto);
-        this.taskService.updateTask(updateDto).subscribe({
+        // Pass files array to update task (will replace existing attachments)
+        this.taskService.updateTask(updateDto, this.selectedFiles).subscribe({
           next: (response: any) => {
             console.log('Update response (Form):', response);
-            const updatedTask = response.data;
-            
-            // Normalize
-            updatedTask.status = updatedTask.status ? updatedTask.status.toLowerCase() : updatedTask.status;
-
-            const index = this.tasks.findIndex(t => t.id === updatedTask.id);
-            if (index !== -1) {
-              // Preserve existing attachments since update doesn't change them
-              // and backend returns attachments as string
-              const existingAttachments = this.tasks[index].attachments;
-              this.tasks[index] = { 
-                ...this.tasks[index], 
-                ...updatedTask,
-                attachments: existingAttachments 
-              };
-              this.applyFilter();
-            }
+            // Reload tasks to get fresh data including updated attachments
+            this.loadTasks();
             this.closeModal();
             this.isSubmitting = false;
             
@@ -494,8 +506,8 @@ export class TaskListComponent implements OnInit {
             status: statusForBackend
         };
         console.log('Parameters create:', createDto);
-        // Use FormData handling via service
-        this.taskService.createTask(createDto, this.selectedFiles[0]).subscribe({
+        // Use FormData handling via service - pass all selected files
+        this.taskService.createTask(createDto, this.selectedFiles).subscribe({
           next: (response: any) => {
             console.log('Create response:', response);
             // Backend returns only ID (e.g., "cf7...") in response.data for create.
@@ -591,6 +603,57 @@ export class TaskListComponent implements OnInit {
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return Math.round(bytes / Math.pow(k, i) * 100) / 100 + ' ' + sizes[i];
+  }
+
+  formatText(type: 'bold' | 'italic' | 'list' | 'link', textarea: HTMLTextAreaElement): void {
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+    let formattedText = '';
+    let cursorOffset = 0;
+
+    switch (type) {
+      case 'bold':
+        formattedText = `**${selectedText || 'bold text'}**`;
+        cursorOffset = selectedText ? formattedText.length : 2;
+        break;
+      case 'italic':
+        formattedText = `*${selectedText || 'italic text'}*`;
+        cursorOffset = selectedText ? formattedText.length : 1;
+        break;
+      case 'list':
+        if (selectedText) {
+          // Convert selected lines to bullet points
+          const lines = selectedText.split('\n');
+          formattedText = lines.map(line => `• ${line}`).join('\n');
+        } else {
+          formattedText = '• ';
+        }
+        cursorOffset = formattedText.length;
+        break;
+      case 'link':
+        if (selectedText) {
+          formattedText = `[${selectedText}](url)`;
+          cursorOffset = formattedText.length - 1; // Position before closing paren
+        } else {
+          formattedText = '[link text](url)';
+          cursorOffset = 1; // Position after opening bracket
+        }
+        break;
+    }
+
+    // Insert formatted text
+    const newValue = textarea.value.substring(0, start) + formattedText + textarea.value.substring(end);
+    
+    // Update form control
+    this.taskForm.patchValue({ description: newValue });
+    
+    // Restore focus and set cursor position
+    setTimeout(() => {
+      textarea.focus();
+      const newCursorPos = start + cursorOffset;
+      textarea.setSelectionRange(newCursorPos, newCursorPos);
+    }, 0);
   }
 
   // Attachment viewing methods

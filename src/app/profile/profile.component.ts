@@ -44,6 +44,19 @@ export class ProfileComponent implements OnInit {
     showClose: true
   };
 
+  // Logout confirmation modal
+  showLogoutConfirmModal = false;
+  logoutConfirmModalConfig: ModalConfig = {
+    type: 'warning',
+    title: 'Confirm Logout',
+    message: 'Are you sure you want to logout?',
+    showClose: false,
+    showYes: true,
+    showNo: true,
+    yesText: 'Yes, Logout',
+    noText: 'Cancel'
+  };
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -153,8 +166,21 @@ export class ProfileComponent implements OnInit {
     document.documentElement.classList.toggle('dark');
   }
 
-  logout(): void {
+  openLogoutConfirmModal(): void {
+    this.showLogoutConfirmModal = true;
+  }
+
+  onLogoutConfirmYes(): void {
+    this.showLogoutConfirmModal = false;
     this.authService.logout();
     this.router.navigate(['/']);
+  }
+
+  onLogoutConfirmNo(): void {
+    this.showLogoutConfirmModal = false;
+  }
+
+  logout(): void {
+    this.openLogoutConfirmModal();
   }
 }

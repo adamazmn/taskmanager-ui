@@ -42,20 +42,28 @@ export class TaskService {
     return this.getUserTaskDetail(username);
   }
 
-  // Create task (Note: Backend uses multipart/form-data)
-  createTask(dto: any, file?: File): Observable<any> {
+  // Create task with multiple files support
+  createTask(dto: any, files?: File[]): Observable<any> {
     const formData = new FormData();
     formData.append('data', JSON.stringify(dto));
-    if (file) {
-      formData.append('file', file);
+    if (files && files.length > 0) {
+      files.forEach(file => {
+        formData.append('files', file);
+      });
     }
     return this.http.post(`${this.apiUrl}/createTask`, formData);
   }
 
-  // Update task - Support both signatures for backward compatibility
-  updateTask(idOrDto: any, optionalDto?: any): Observable<any> {
-    let dto = optionalDto ? { ...optionalDto, id: idOrDto } : idOrDto;
-    return this.http.put(`${this.apiUrl}/updateTask`, dto);
+  // Update task with multiple files support (replaces existing attachments)
+  updateTask(dto: any, files?: File[]): Observable<any> {
+    const formData = new FormData();
+    formData.append('data', JSON.stringify(dto));
+    if (files && files.length > 0) {
+      files.forEach(file => {
+        formData.append('files', file);
+      });
+    }
+    return this.http.put(`${this.apiUrl}/updateTask`, formData);
   }
 
   // Update user profile

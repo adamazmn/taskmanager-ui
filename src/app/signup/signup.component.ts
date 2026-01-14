@@ -89,6 +89,19 @@ export class SignupComponent implements OnInit {
       return;
     }
 
+    // Password minimum length validation
+    if (this.password.length < 8) {
+      this.modalConfig = {
+        type: 'error',
+        title: 'Validation Failed',
+        message: 'Password must be at least 8 characters long.',
+        showClose: true,
+        closeText: 'Understood'
+      };
+      this.isModalOpen = true;
+      return;
+    }
+
     this.isLoading = true;
     this.errorMessage = '';
     console.log('Sending registration request for:', this.username);

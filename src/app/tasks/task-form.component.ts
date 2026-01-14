@@ -97,7 +97,7 @@ export class TaskFormComponent implements OnInit {
       };
 
       if (this.isEditMode && this.taskId) {
-        this.taskService.updateTask(this.taskId, taskData).subscribe({
+        this.taskService.updateTask({ taskId: this.taskId, ...taskData }, this.selectedFiles).subscribe({
           next: () => {
             this.router.navigate(['/tasks']);
           },
@@ -110,7 +110,7 @@ export class TaskFormComponent implements OnInit {
       } else {
         const username = this.authService.getUsername() || '';
         const createData = { ...taskData, username };
-        this.taskService.createTask(createData, this.selectedFiles[0]).subscribe({
+        this.taskService.createTask(createData, this.selectedFiles).subscribe({
           next: () => {
             this.router.navigate(['/tasks']);
           },

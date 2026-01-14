@@ -235,4 +235,8 @@
         class="fixed bottom-6 right-6 lg:hidden w-14 h-14 bg-primary text-white rounded-full shadow-2xl flex items-center justify-center z-[100]">
         <span class="material-symbols-outlined">menu</span>
     </button>
+
+    <!-- Logout Confirmation Modal -->
+    <app-modal class="relative z-[9999]" [isOpen]="showLogoutConfirmModal" [config]="logoutConfirmModalConfig"
+        (close)="onLogoutConfirmNo()" (yes)="onLogoutConfirmYes()" (no)="onLogoutConfirmNo()"></app-modal>
 </div>
