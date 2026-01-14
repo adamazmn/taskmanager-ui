@@ -437,11 +437,19 @@
 
             <!-- PDF Preview -->
             <!-- PDF Preview -->
+            <!-- PDF Preview -->
             <div *ngIf="isPdfFile(selectedAttachment)" class="w-full h-full flex flex-col items-center justify-center">
-              <div *ngIf="!previewUrl" class="animate-pulse flex flex-col items-center">
+              <div *ngIf="!previewUrl && !previewError" class="animate-pulse flex flex-col items-center">
                 <span class="material-symbols-outlined text-4xl text-zinc-300 animate-spin">progress_activity</span>
                 <p class="text-sm text-zinc-400 mt-2">Loading preview...</p>
               </div>
+
+              <div *ngIf="previewError" class="flex flex-col items-center text-rose-500">
+                <span class="material-symbols-outlined text-4xl mb-2">error_outline</span>
+                <p class="text-sm font-medium">Failed to load preview</p>
+                <p class="text-xs opacity-70 mt-1">Please try downloading the file</p>
+              </div>
+
               <iframe *ngIf="previewUrl" [src]="previewUrl"
                 class="w-full h-full rounded-lg border border-zinc-200 dark:border-zinc-800" title="PDF Preview"
                 frameborder="0">

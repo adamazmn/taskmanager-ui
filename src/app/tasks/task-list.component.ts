@@ -37,11 +37,11 @@ export class TaskListComponent implements OnInit {
   showAttachmentModal = false;
   selectedAttachment: TaskAttachment | null = null;
   selectedTaskForAttachments: Task | null = null;
-  previewUrl: SafeResourceUrl | null = null;
-  private currentObjectUrl: string | null = null;
-
   // Mobile Menu
   isMobileMenuOpen = false;
+  previewError = false;
+  previewUrl: SafeResourceUrl | null = null;
+  private currentObjectUrl: string | null = null;
   
   toggleMobileMenu(): void {
     this.isMobileMenuOpen = !this.isMobileMenuOpen;
@@ -684,7 +684,7 @@ export class TaskListComponent implements OnInit {
     if (task.attachments && task.attachments.length > 0) {
       setTimeout(() => {
         this.selectAttachment(task.attachments![0]);
-      }, 0);
+      }, 100);
     }
   }
 
@@ -701,6 +701,7 @@ export class TaskListComponent implements OnInit {
 
   selectAttachment(attachment: TaskAttachment): void {
     this.selectedAttachment = attachment;
+    this.previewError = false; // Reset error state
     
     // Clear previous preview
     if (this.currentObjectUrl) {
@@ -719,6 +720,8 @@ export class TaskListComponent implements OnInit {
         },
         error: (err) => {
           console.error('Failed to fetch file for preview', err);
+          this.previewError = true;
+          this.cdr.detectChanges();
         }
       });
     }

@@ -133,9 +133,14 @@
                 <span
                   class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">lock</span>
               </div>
+              <p *ngIf="password.length > 0 && password.length < 8"
+                class="text-xs text-rose-500 mt-1 pl-1 flex items-center gap-1 animate-in fade-in slide-in-from-top-1 duration-200">
+                <span class="material-symbols-outlined text-sm">error</span>
+                Password must be at least 8 characters
+              </p>
             </div>
 
-            <button type="submit" [disabled]="isLoading"
+            <button type="submit" [disabled]="isLoading || (password.length > 0 && password.length < 8)"
               class="w-full bg-primary dark:bg-white text-white dark:text-black font-semibold py-4 rounded-lg hover:opacity-90 active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50 mt-6">
               {{ isLoading ? 'Creating Account...' : 'Create Account' }}
               <span *ngIf="!isLoading" class="material-symbols-outlined text-xl">arrow_forward</span>
