@@ -682,7 +682,9 @@ export class TaskListComponent implements OnInit {
     this.selectedTaskForAttachments = task;
     this.showAttachmentModal = true;
     if (task.attachments && task.attachments.length > 0) {
-      this.selectAttachment(task.attachments[0]);
+      setTimeout(() => {
+        this.selectAttachment(task.attachments![0]);
+      }, 0);
     }
   }
 
@@ -713,6 +715,7 @@ export class TaskListComponent implements OnInit {
         next: (blob) => {
           this.currentObjectUrl = URL.createObjectURL(blob);
           this.previewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.currentObjectUrl);
+          this.cdr.detectChanges();
         },
         error: (err) => {
           console.error('Failed to fetch file for preview', err);
