@@ -43,6 +43,17 @@ export class ProfileComponent implements OnInit {
     message: '',
     showClose: true
   };
+  
+  // Mobile Menu
+  isMobileMenuOpen = false;
+  
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+  
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+  }
 
   // Logout confirmation modal
   showLogoutConfirmModal = false;

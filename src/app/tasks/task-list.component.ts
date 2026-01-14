@@ -40,6 +40,17 @@ export class TaskListComponent implements OnInit {
   previewUrl: SafeResourceUrl | null = null;
   private currentObjectUrl: string | null = null;
 
+  // Mobile Menu
+  isMobileMenuOpen = false;
+  
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+  
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+  }
+
   statusConfirmModalConfig: ModalConfig = {
     type: 'warning',
     message: '',
