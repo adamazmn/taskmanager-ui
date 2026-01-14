@@ -23,6 +23,7 @@ export class DashboardComponent implements OnInit {
   weeklyActivity: { day: string, count: number, height: string }[] = [];
   isLoading = false;
   userName = 'User';
+  isMobileMenuOpen = false;
 
   // Logout confirmation modal
   showLogoutConfirmModal = false;
@@ -197,5 +198,13 @@ export class DashboardComponent implements OnInit {
 
   toggleTheme() {
     document.documentElement.classList.toggle('dark');
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
   }
 }

@@ -1,5 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { HttpClient } from '@angular/common/http';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { RouterModule, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { TaskService } from '../services/task.service';
@@ -35,6 +37,8 @@ export class TaskListComponent implements OnInit {
   showAttachmentModal = false;
   selectedAttachment: TaskAttachment | null = null;
   selectedTaskForAttachments: Task | null = null;
+  previewUrl: SafeResourceUrl | null = null;
+  private currentObjectUrl: string | null = null;
 
   statusConfirmModalConfig: ModalConfig = {
     type: 'warning',
@@ -97,7 +101,9 @@ export class TaskListComponent implements OnInit {
     private authService: AuthService,
     private fb: FormBuilder,
     private cdr: ChangeDetectorRef,
-    private router: Router
+    private router: Router,
+    private http: HttpClient,
+    private sanitizer: DomSanitizer
   ) {
     this.initForm();
     const username = this.authService.getUsername();
@@ -663,20 +669,45 @@ export class TaskListComponent implements OnInit {
 
   openAttachmentPreview(task: Task): void {
     this.selectedTaskForAttachments = task;
-    if (task.attachments && task.attachments.length > 0) {
-      this.selectedAttachment = task.attachments[0];
-    }
     this.showAttachmentModal = true;
+    if (task.attachments && task.attachments.length > 0) {
+      this.selectAttachment(task.attachments[0]);
+    }
   }
 
   closeAttachmentPreview(): void {
     this.showAttachmentModal = false;
     this.selectedAttachment = null;
     this.selectedTaskForAttachments = null;
+    if (this.currentObjectUrl) {
+      URL.revokeObjectURL(this.currentObjectUrl);
+      this.currentObjectUrl = null;
+    }
+    this.previewUrl = null;
   }
 
   selectAttachment(attachment: TaskAttachment): void {
     this.selectedAttachment = attachment;
+    
+    // Clear previous preview
+    if (this.currentObjectUrl) {
+      URL.revokeObjectURL(this.currentObjectUrl);
+      this.currentObjectUrl = null;
+    }
+    this.previewUrl = null;
+
+    if (this.isPdfFile(attachment) || this.isImageFile(attachment)) {
+      const url = this.getAttachmentUrl(attachment);
+      this.http.get(url, { responseType: 'blob' }).subscribe({
+        next: (blob) => {
+          this.currentObjectUrl = URL.createObjectURL(blob);
+          this.previewUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.currentObjectUrl);
+        },
+        error: (err) => {
+          console.error('Failed to fetch file for preview', err);
+        }
+      });
+    }
   }
 
   downloadAttachment(attachment: TaskAttachment): void {
