@@ -18,6 +18,7 @@ export class LoginComponent implements OnInit {
   rememberMe = false;
   isLoading = false;
   errorMessage = '';
+  showPassword = false;
 
   // Mouse tracking for space background effect
   mouseX = 0;

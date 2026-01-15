@@ -21,9 +21,17 @@ export class DashboardComponent implements OnInit {
   recentTasks: any[] = [];
   upcomingTasks: any[] = [];
   weeklyActivity: { day: string, count: number, height: string }[] = [];
+  monthlyActivity: { day: string, count: number, height: string }[] = [];
   isLoading = false;
   userName = 'User';
   isMobileMenuOpen = false;
+  
+  // Analytics properties
+  pendingTasksDiff = 0;
+  dailyGoal = 5;
+  dailyGoalPercentage = 0;
+  activeView: 'weekly' | 'monthly' = 'weekly';
+  allTasks: any[] = [];
 
   // Logout confirmation modal
   showLogoutConfirmModal = false;
@@ -95,6 +103,7 @@ export class DashboardComponent implements OnInit {
           }));
           
           this.pendingTasksCount = tasks.filter((t: any) => t.status === 'pending').length;
+          this.allTasks = tasks;
           
           // Count completed today
           const now = new Date();
@@ -105,6 +114,14 @@ export class DashboardComponent implements OnInit {
                      t.updatedDate.toDateString() === todayString;
           }).length;
           
+          // Calculate pending tasks difference since yesterday
+          this.calculatePendingDiff(tasks, now);
+          
+          // Calculate daily goal percentage
+          this.dailyGoalPercentage = this.dailyGoal > 0 
+            ? Math.min(100, Math.round((this.completedTodayCount / this.dailyGoal) * 100)) 
+            : 0;
+          
           // Get 3 most recent tasks
           this.recentTasks = tasks.slice(0, 3);
           
@@ -114,8 +131,9 @@ export class DashboardComponent implements OnInit {
             .sort((a: any, b: any) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime())
             .slice(0, 2);
 
-          // Calculate Activity Trends (Last 7 days completion)
+          // Calculate Activity Trends
           this.calculateWeeklyActivity(tasks);
+          this.calculateMonthlyActivity(tasks);
         }
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -206,5 +224,62 @@ export class DashboardComponent implements OnInit {
 
   closeMobileMenu(): void {
     this.isMobileMenuOpen = false;
+  }
+
+  calculateMonthlyActivity(tasks: any[]): void {
+    const today = new Date();
+    const weeks: { label: string, count: number }[] = [];
+    
+    // Calculate 4 weeks of data
+    for (let week = 3; week >= 0; week--) {
+      let weekCount = 0;
+      for (let day = 0; day < 7; day++) {
+        const d = new Date(today);
+        d.setDate(today.getDate() - (week * 7 + day));
+        const dStr = d.toDateString();
+        
+        tasks.forEach(t => {
+          if (t.status === 'done' && t.updatedDate && t.updatedDate.toDateString() === dStr) {
+            weekCount++;
+          }
+        });
+      }
+      weeks.push({ label: `W${4 - week}`, count: weekCount });
+    }
+
+    let maxCount = Math.max(...weeks.map(w => w.count), 1);
+    this.monthlyActivity = weeks.map(item => ({
+      day: item.label,
+      count: item.count,
+      height: `${Math.max(5, (item.count / maxCount) * 100)}%`
+    }));
+  }
+
+  calculatePendingDiff(tasks: any[], now: Date): void {
+    const todayString = now.toDateString();
+    
+    // Count new tasks created today
+    const newTasksToday = tasks.filter((t: any) => {
+      return t.createdDate && t.createdDate.toDateString() === todayString;
+    }).length;
+
+    // Difference = new tasks today - completed today
+    this.pendingTasksDiff = newTasksToday - this.completedTodayCount;
+  }
+
+  setActiveView(view: 'weekly' | 'monthly'): void {
+    this.activeView = view;
+  }
+
+  getCurrentActivity(): { day: string, count: number, height: string }[] {
+    return this.activeView === 'weekly' ? this.weeklyActivity : this.monthlyActivity;
+  }
+
+  navigateToTasks(): void {
+    this.router.navigate(['/tasks']);
+  }
+
+  navigateToProfile(): void {
+    this.router.navigate(['/profile']);
   }
 }

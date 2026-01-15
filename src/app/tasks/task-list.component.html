@@ -62,74 +62,72 @@
   <!-- Main Content -->
   <main class="flex-1 h-full overflow-y-auto p-6 lg:p-12 relative">
     <!-- Header -->
-    <header class="flex justify-between items-center mb-12">
+    <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
       <div>
         <h2 class="display-font text-3xl font-light tracking-tight">Tasks</h2>
         <p class="text-gray-400 text-sm mt-1">Manage your daily tasks</p>
       </div>
-    </header>
-
-    <!-- Filters and Create Button -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
-      <div class="flex flex-wrap items-center gap-3">
-        <!-- Search Input -->
-        <div class="relative">
-          <div
-            class="flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-zinc-400 transition-all focus-within:border-primary min-w-[200px]">
-            <span class="material-symbols-outlined text-zinc-400 text-sm">search</span>
-            <input type="text" [ngModel]="searchQuery" (ngModelChange)="onSearchChange($event)"
-              class="bg-transparent border-0 p-0 text-sm font-medium focus:ring-0 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 w-full outline-none"
-              placeholder="Search tasks...">
-            <button *ngIf="searchQuery" (click)="onSearchChange('')"
-              class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors">
-              <span class="material-symbols-outlined text-sm">close</span>
-            </button>
-          </div>
-        </div>
-        <div class="relative group">
-          <div
-            class="flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-zinc-400 transition-all focus-within:border-primary">
-            <span class="material-symbols-outlined text-zinc-400 text-sm">calendar_month</span>
-            <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400 whitespace-nowrap">Added:</span>
-            <input type="date" [ngModel]="filterDateAdded" (ngModelChange)="onDateAddedChange($event)"
-              class="bg-transparent border-0 p-0 text-sm font-medium focus:ring-0 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 w-auto outline-none cursor-pointer"
-              placeholder="Date Added">
-          </div>
-        </div>
-        <div class="relative group">
-          <div
-            class="flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-zinc-400 transition-all focus-within:border-primary">
-            <span class="material-symbols-outlined text-zinc-400 text-sm">event_available</span>
-            <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400 whitespace-nowrap">Due:</span>
-            <input type="date" [ngModel]="filterDueDate" (ngModelChange)="onDueDateChange($event)"
-              class="bg-transparent border-0 p-0 text-sm font-medium focus:ring-0 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 w-auto outline-none cursor-pointer"
-              placeholder="Due Date">
-          </div>
-        </div>
-        <div class="relative group">
-          <div class="relative">
-            <select [ngModel]="filterStatus" (ngModelChange)="onFilterChange($event)"
-              class="pl-10 pr-8 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm font-medium hover:border-zinc-400 transition-all outline-none focus:border-primary appearance-none cursor-pointer">
-              <option value="all">All Status</option>
-              <option value="pending">Pending</option>
-              <option value="done">Done</option>
-            </select>
-            <span
-              class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm pointer-events-none">flag</span>
-            <span
-              class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm pointer-events-none">expand_more</span>
-          </div>
-        </div>
-        <span class="h-6 w-[1px] bg-zinc-300 dark:bg-zinc-700 mx-2"></span>
-        <button (click)="clearFilters()"
-          class="text-sm font-medium text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">Clear
-          All</button>
-      </div>
       <button (click)="openModal()"
-        class="inline-flex items-center justify-center gap-2 w-48 h-12 bg-primary text-white dark:bg-white dark:text-black rounded-full font-medium hover:opacity-90 transition-opacity">
+        class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary text-white dark:bg-white dark:text-black rounded-full font-medium hover:opacity-90 transition-opacity shadow-lg shadow-primary/20 dark:shadow-none">
         <span class="material-symbols-outlined text-sm">add</span>
         Create New Task
       </button>
+    </header>
+
+    <!-- Filters -->
+    <div class="flex flex-wrap items-center gap-3 mb-8">
+      <!-- Search Input -->
+      <div class="relative">
+        <div
+          class="flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-zinc-400 transition-all focus-within:border-primary min-w-[200px]">
+          <span class="material-symbols-outlined text-zinc-400 text-sm">search</span>
+          <input type="text" [ngModel]="searchQuery" (ngModelChange)="onSearchChange($event)"
+            class="bg-transparent border-0 p-0 text-sm font-medium focus:ring-0 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 w-full outline-none"
+            placeholder="Search tasks...">
+          <button *ngIf="searchQuery" (click)="onSearchChange('')"
+            class="text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-300 transition-colors">
+            <span class="material-symbols-outlined text-sm">close</span>
+          </button>
+        </div>
+      </div>
+      <div class="relative group">
+        <div
+          class="flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-zinc-400 transition-all focus-within:border-primary">
+          <span class="material-symbols-outlined text-zinc-400 text-sm">calendar_month</span>
+          <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400 whitespace-nowrap">Added:</span>
+          <input type="date" [ngModel]="filterDateAdded" (ngModelChange)="onDateAddedChange($event)"
+            class="bg-transparent border-0 p-0 text-sm font-medium focus:ring-0 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 w-auto outline-none cursor-pointer"
+            placeholder="Date Added">
+        </div>
+      </div>
+      <div class="relative group">
+        <div
+          class="flex items-center gap-2 px-3 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg hover:border-zinc-400 transition-all focus-within:border-primary">
+          <span class="material-symbols-outlined text-zinc-400 text-sm">event_available</span>
+          <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400 whitespace-nowrap">Due:</span>
+          <input type="date" [ngModel]="filterDueDate" (ngModelChange)="onDueDateChange($event)"
+            class="bg-transparent border-0 p-0 text-sm font-medium focus:ring-0 text-zinc-900 dark:text-zinc-100 placeholder-zinc-400 w-auto outline-none cursor-pointer"
+            placeholder="Due Date">
+        </div>
+      </div>
+      <div class="relative group">
+        <div class="relative">
+          <select [ngModel]="filterStatus" (ngModelChange)="onFilterChange($event)"
+            class="pl-10 pr-8 py-2 bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-lg text-sm font-medium hover:border-zinc-400 transition-all outline-none focus:border-primary appearance-none cursor-pointer">
+            <option value="all">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="done">Done</option>
+          </select>
+          <span
+            class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm pointer-events-none">flag</span>
+          <span
+            class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 text-sm pointer-events-none">expand_more</span>
+        </div>
+      </div>
+      <span class="h-6 w-[1px] bg-zinc-300 dark:bg-zinc-700 mx-2"></span>
+      <button (click)="clearFilters()"
+        class="text-sm font-medium text-zinc-400 hover:text-zinc-900 dark:hover:text-white transition-colors">Clear
+        All</button>
     </div>
 
     <!-- Task Lists -->

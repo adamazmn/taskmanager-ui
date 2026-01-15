@@ -8,13 +8,12 @@ import { TaskService } from '../services/task.service';
 import { AuthService } from '../services/auth.service';
 import { Task, TaskAttachment } from '../models/task.model';
 import { ModalComponent, ModalConfig } from '../shared/components/modal/modal.component';
-import { SafePipe } from '../shared/pipes/safe.pipe';
 import { environment } from '../../environments/environment';
 
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, ModalComponent, SafePipe],
+  imports: [CommonModule, RouterModule, ReactiveFormsModule, FormsModule, ModalComponent],
   templateUrl: './task-list.component.html',
   styleUrls: ['./task-list.component.scss']
 })
@@ -675,6 +674,11 @@ export class TaskListComponent implements OnInit {
 
   // Attachment viewing methods
   getAttachmentUrl(attachment: TaskAttachment): string {
+    // If path is a full URL (Supabase), use it directly
+    if (attachment.path && attachment.path.startsWith('http')) {
+      return attachment.path;
+    }
+    // Fallback to backend files endpoint for old local files
     return `${this.apiBaseUrl}/files/${attachment.storedName}`;
   }
 

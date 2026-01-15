@@ -22,6 +22,7 @@ export class SignupComponent implements OnInit {
   currentDate: string = '';
   errorMessage = '';
   isLoading = false;
+  showPassword = false;
 
   // Mouse tracking for space background effect
   mouseX = 0;
